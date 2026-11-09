@@ -40,7 +40,9 @@ struct ScheduleRhythmSection: View {
             .padding(SettingsTokens.rowInsets)
 
             Divider()
-            SettingsToggleRow("Add longer breaks", symbol: "hourglass", isOn: Binding(
+            SettingsToggleRow("Add longer breaks", symbol: "hourglass",
+                description: draft.useRepetition ? "After this many completed short breaks since your last long break." : nil,
+                isOn: Binding(
                 get: { draft.useRepetition },
                 set: { draft.setLongBreaksEnabled($0) }
             ))
