@@ -35,6 +35,7 @@ public struct ScheduleDraft: Equatable, Sendable {
     public var longBreakMinutes: Double = 30
     public var disciplineLevel = DisciplineLevel.gentle
     public var progressiveEnforcement = false
+    public var consecutiveSkipLimit: Int?
 
     public init(schedule: Schedule?) {
         guard let schedule else { return }
@@ -48,6 +49,7 @@ public struct ScheduleDraft: Equatable, Sendable {
         breakDurationMinutes = schedule.breakDuration / 60
         disciplineLevel = schedule.disciplineLevel
         progressiveEnforcement = schedule.progressiveEnforcement
+        consecutiveSkipLimit = schedule.consecutiveSkipLimit
 
         days = schedule.days.activeDays
 
@@ -131,7 +133,8 @@ public struct ScheduleDraft: Equatable, Sendable {
             repetitionRule: repetitionRule,
             disciplineLevel: disciplineLevel,
             dailyBreakCap: existing?.dailyBreakCap,
-            progressiveEnforcement: progressiveEnforcement
+            progressiveEnforcement: progressiveEnforcement,
+            consecutiveSkipLimit: consecutiveSkipLimit.map { Self.clamped($0, to: 1...20) }
         )
     }
 
