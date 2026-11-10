@@ -9,6 +9,8 @@ struct ScheduleRhythmSection: View {
     private enum Field: Hashable {
         case interval(UUID)
         case shortBreakCount
+        case shortBreakDuration
+        case longBreakDuration
     }
 
     var body: some View {
@@ -87,7 +89,7 @@ struct ScheduleRhythmSection: View {
     private var breakClause: some View {
         HStack(spacing: SettingsTokens.stripItemSpacing) {
             Text("break for")
-            minutes("Short break duration", value: $draft.rhythmBreakMinutes)
+            minutes("Short break duration", value: $draft.rhythmBreakMinutes, focus: .shortBreakDuration)
             Text("min.")
         }
     }
@@ -104,7 +106,8 @@ struct ScheduleRhythmSection: View {
     private var longDurationClause: some View {
         HStack(spacing: SettingsTokens.stripItemSpacing) {
             Text("longer break for")
-            minutes("Longer break duration", value: $draft.longBreakMinutes, range: ScheduleDraft.longBreakRange, step: 5)
+            minutes("Longer break duration", value: $draft.longBreakMinutes,
+                    range: ScheduleDraft.longBreakRange, step: 5, focus: .longBreakDuration)
             Text("min.")
         }
     }
@@ -153,8 +156,13 @@ struct ScheduleRhythmSection: View {
                 .focused($focusedField, equals: focus)
                 .frame(width: SettingsTokens.numberFieldWidth)
                 .accessibilityLabel(label)
-                .onChange(of: value.wrappedValue) { newValue in
-                    value.wrappedValue = ScheduleDraft.clamped(newValue, to: range)
+                .onSubmit {
+                    value.wrappedValue = ScheduleDraft.clamped(value.wrappedValue, to: range)
+                }
+                .onChange(of: focusedField == focus) { isFocused in
+                    if !isFocused {
+                        value.wrappedValue = ScheduleDraft.clamped(value.wrappedValue, to: range)
+                    }
                 }
             Stepper(label, value: value, in: range, step: step)
                 .labelsHidden()
@@ -165,15 +173,21 @@ struct ScheduleRhythmSection: View {
 
     private func minutes(
         _ label: LocalizedStringKey, value: Binding<Double>,
-        range: ClosedRange<Double> = ScheduleDraft.breakRange, step: Double = 1
+        range: ClosedRange<Double> = ScheduleDraft.breakRange, step: Double = 1, focus: Field
     ) -> some View {
         HStack(spacing: SettingsTokens.stripItemSpacing) {
             TextField("", value: value, format: .number.precision(.fractionLength(0...2)))
                 .textFieldStyle(.roundedBorder)
+                .focused($focusedField, equals: focus)
                 .frame(width: SettingsTokens.numberFieldWidth)
                 .accessibilityLabel(label)
-                .onChange(of: value.wrappedValue) { newValue in
-                    value.wrappedValue = ScheduleDraft.clamped(newValue, to: range)
+                .onSubmit {
+                    value.wrappedValue = ScheduleDraft.clamped(value.wrappedValue, to: range)
+                }
+                .onChange(of: focusedField == focus) { isFocused in
+                    if !isFocused {
+                        value.wrappedValue = ScheduleDraft.clamped(value.wrappedValue, to: range)
+                    }
                 }
             Stepper(label, value: value, in: range, step: step)
                 .labelsHidden()

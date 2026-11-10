@@ -28,6 +28,8 @@ swift test --package-path StandLockKit
 
 When you change behaviour in `StandLockKit`, update the tests that cover it. New logic needs new tests in the matching test target. For a bug fix, add a regression test that fails before the fix and passes after. That test is often more useful to me than the fix itself. Changes that only touch the app target (the UI) have no unit tests, so describe in the PR how you checked them. Put new logic in `StandLockKit` where you can, so it stays testable.
 
+Rhythm number fields also have a standalone UI regression test. Run `bash StandLockKit/Tests/SettingsUI/run.sh` from a macOS desktop session; it compiles and exercises the actual settings controls.
+
 One thing that will confuse you at some point: after you add or remove a stored property on a model, the suite may die with `signal code 11` and no failing test name. That is SPM linking a test target against a stale build. Run `swift package clean --package-path StandLockKit` and try again.
 
 ## Code
