@@ -144,7 +144,13 @@ struct AdaptiveCoordinatorTests {
         var schedule = makeSchedule(level: level, breakInterval: 100, breakDuration: 600, progressiveEnforcement: true)
         schedule.consecutiveSkipLimit = 2
         let coordinator = make(time, locker, schedules: [schedule])
-        coordinator.skipNextBreak(expectedSlotID: coordinator.pendingSlotID)
+        if level == .strict {
+            time.advance(100)
+            #expect(await waitUntil { locker.isShowing })
+            coordinator.escapeActiveBreak(expectedBreakID: locker.lastBreakID)
+        } else {
+            coordinator.skipNextBreak(expectedSlotID: coordinator.pendingSlotID)
+        }
         let next = coordinator.captureEnforcementState().pendingBreakDates[schedule.id]!
         time.advance(next.timeIntervalSince(time.clock.now()))
         #expect(await waitUntil { locker.isShowing })
@@ -162,7 +168,7 @@ struct AdaptiveCoordinatorTests {
         #expect(locker.isShowing)
         coordinator.completeActiveBreak(expectedBreakID: locker.lastBreakID)
         #expect(coordinator.captureEnforcementState().consecutiveDismissalCounts[schedule.id] == 0)
-        #expect(coordinator.canSkipNextBreak)
+        #expect(coordinator.canSkipNextBreak == (level != .strict))
         coordinator.stop()
     }
 

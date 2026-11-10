@@ -301,10 +301,8 @@ final class AppCoordinator: ObservableObject {
     private var lastStrictModeAvailable: Bool?
 
     /// Enabled schedules with Strict reduced to Firm while the permissions it needs are missing.
-    /// Firm, not Gentle: Strict is chosen for maximum friction, and Gentle's first tier is a
-    /// plain skip button, so a permission blip would hand the user a break they can dismiss
-    /// instantly. Firm keeps real friction (delay plus phrase) and needs no permission at all --
-    /// only Strict installs the event tap, in `OverlayWindowController.showOverlay`.
+    /// Firm preserves a longer emergency hold without installing an event tap. The chosen
+    /// Strict policy is passed separately so this display fallback cannot enable Skip or Pause.
     private func enforceableSchedules() -> [Schedule] {
         let strictAvailable = permissionChecker.strictModeAvailable
         return schedules.map { schedule in
@@ -388,7 +386,8 @@ final class AppCoordinator: ObservableObject {
                                statistics: restoredStatistics ?? todayStats,
                                restoring: state,
                                verifiedRestDuration: verifiedStartupRest,
-                               initiallyAway: systemAwayMonitor.confirmedReasons)
+                               initiallyAway: systemAwayMonitor.confirmedReasons,
+                               strictScheduleIDs: Set(schedules.filter { $0.disciplineLevel == .strict }.map(\.id)))
         verifiedStartupRest = 0
         systemAwayMonitor.synchronize(breakCoordinator)
         refreshDismissalAvailability()

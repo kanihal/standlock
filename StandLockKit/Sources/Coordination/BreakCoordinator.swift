@@ -12,6 +12,8 @@ public final class BreakCoordinator {
     private let clock: CoordinatorClock
 
     private var activeSchedules: [Schedule] = []
+    /// Chosen Strict policy survives platform permission fallbacks to a softer presentation.
+    private var requestedStrictScheduleIDs: Set<UUID> = []
     private var preferences: AppPreferences = AppPreferences()
     private var repetitionTrackers: [UUID: RepetitionTracker] = [:]
     private var breakTimer: Task<Void, Never>?
@@ -42,10 +44,10 @@ public final class BreakCoordinator {
     public var onCheckpoint: ((EnforcementState, BreakStatistics) -> Bool)?
     public var hasUnfinishedBreak: Bool { currentBreak != nil || !dormantBreaks.isEmpty || pendingOverlayDismissal }
     public var currentStatistics: BreakStatistics { statistics }
-    /// A global manual pause must not suspend any currently enforced zero-limit schedule.
+    /// A global pause must not suspend a currently enforced Strict or zero-limit schedule.
     public var canPauseScheduling: Bool {
         !activeSchedules.contains { schedule in
-            schedule.consecutiveSkipLimit == 0 && (
+            !availability(for: schedule).manualPauseAllowed && (
                 currentBreak?.scheduleId == schedule.id
                 || (schedule.isEnabled && scheduler.isWithinActiveWindow(schedule, at: clock.now())))
         }
@@ -120,7 +122,8 @@ public final class BreakCoordinator {
                       statistics: BreakStatistics? = nil,
                       restoring state: EnforcementState = EnforcementState(),
                       verifiedRestDuration: TimeInterval = 0,
-                      initiallyAway: Set<AwaySessionTracker.Reason> = []) {
+                      initiallyAway: Set<AwaySessionTracker.Reason> = [],
+                      strictScheduleIDs: Set<UUID> = []) {
         let wasWaitingForCommit = state.runtime?.persistenceIsPending == true
         beginTransition()
         defer {
@@ -130,6 +133,7 @@ public final class BreakCoordinator {
             }
         }
         self.activeSchedules = schedules
+        requestedStrictScheduleIDs = strictScheduleIDs.intersection(Set(schedules.map(\.id)))
         self.preferences = preferences
         self.statistics = statistics ?? BreakStatistics(date: clock.now())
         consecutiveDismissalCounts = state.consecutiveDismissalCounts
@@ -498,7 +502,8 @@ public final class BreakCoordinator {
             consecutiveSkipLimit: schedule.consecutiveSkipLimit,
             consecutiveDismissals: consecutiveDismissalCounts[schedule.id, default: 0],
             dailySkipLimit: schedule.disciplineLevel.dailySkipLimit(preferences: preferences),
-            dailySkips: statistics.breaksSkipped)
+            dailySkips: statistics.breaksSkipped,
+            disciplineLevel: requestedStrictScheduleIDs.contains(schedule.id) ? .strict : schedule.disciplineLevel)
     }
 
     private func recordDismissal(for schedule: Schedule) {
@@ -730,7 +735,7 @@ public final class BreakCoordinator {
         beginTransition()
         defer { endTransition() }
         guard let event = currentBreak, let schedule = currentSchedule, activeBreakCanPostpone, !isSuspended,
-              !availability(for: schedule).isHardBlock,
+              availability(for: schedule).postponeAllowed,
               expectedBreakID == nil || expectedBreakID == event.id else { return }
         completionTimer?.cancel()
         postponedBreak = event
@@ -804,6 +809,13 @@ public final class BreakCoordinator {
         for i in activeSchedules.indices {
             activeSchedules[i].disciplineLevel = level
         }
+        requestedStrictScheduleIDs = level == .strict ? Set(activeSchedules.map(\.id)) : []
+        if let id = currentSchedule?.id {
+            currentSchedule = activeSchedules.first { $0.id == id }
+            if let currentSchedule { locker.updateDismissalAvailability(availability(for: currentSchedule)) }
+        }
+        if let id = postponedSchedule?.id { postponedSchedule = activeSchedules.first { $0.id == id } }
+        stateChanged()
     }
 
     public func updatePreferences(_ preferences: AppPreferences) {
@@ -1131,7 +1143,8 @@ public final class BreakCoordinator {
         locker.showOverlay(level: level, duration: remaining,
             exercise: currentExercise, preferences: preferences,
             statistics: statistics, escalationTier: currentTier(for: schedule),
-            nextIntervalLabel: nextIntervalLabel(for: schedule), canPostpone: activeBreakCanPostpone,
+            nextIntervalLabel: nextIntervalLabel(for: schedule),
+            canPostpone: activeBreakCanPostpone && availability(for: schedule).postponeAllowed,
             breakID: event.id, dismissalAvailability: availability(for: schedule))
         completionTimer?.cancel()
         completionTimer = Task {

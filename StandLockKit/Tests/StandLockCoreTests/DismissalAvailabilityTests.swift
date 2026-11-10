@@ -42,4 +42,15 @@ struct DismissalAvailabilityTests {
         #expect(DisciplineLevel.strict.enforcementPolicy(preferences: preferences).tier(at: 0).quietEscapeHoldDuration == 10)
         #expect(DisciplineLevel.strict.enforcementPolicy(preferences: preferences).tier(at: 3).quietEscapeHoldDuration == 25)
     }
+
+    @Test func strictDisablesNormalDismissalAndDeferralWithoutDisablingEmergencyEscape() {
+        let result = DismissalAvailability(disciplineLevel: .strict)
+        #expect(!result.normalSkipAllowed)
+        #expect(!result.manualPauseAllowed)
+        #expect(!result.postponeAllowed)
+        #expect(result.emergencyEscapeAllowed)
+        let exhausted = DismissalAvailability(progressiveEnforcement: true, consecutiveSkipLimit: 2,
+            consecutiveDismissals: 2, disciplineLevel: .strict)
+        #expect(!exhausted.emergencyEscapeAllowed)
+    }
 }

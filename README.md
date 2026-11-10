@@ -36,7 +36,7 @@ Or [download the DMG](https://github.com/yagizdo/StandLock/releases/latest) and 
 |-------|-----------------|
 | Gentle | Hold Ctrl+Option+Command for 30 seconds |
 | Firm | Hold Ctrl+Option+Command for 40 seconds by default |
-| Strict | Input is blocked. Hold Ctrl+Option+Command to exit |
+| Strict | Input is blocked; Skip, Pause, and Postpone are disabled. Hold Ctrl+Option+Command for emergency escape |
 
 - Set a level per schedule and change it anytime
 - Every break screen shows only **Rest & Recall** and a small timer at the bottom right

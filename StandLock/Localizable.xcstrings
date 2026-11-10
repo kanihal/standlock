@@ -1,6 +1,40 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Input blocked; no skipping or pausing. Emergency escape only.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Giriş engellenir; atlama veya duraklatma yoktur. Yalnızca acil çıkış."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "屏蔽输入；不可跳过或暂停。仅允许紧急退出。"
+          }
+        }
+      }
+    },
+    "Strict disables skipping, postponing, and manual pauses. Emergency escape remains available unless the consecutive skip limit is reached.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Katı mod atlamayı, ertelemeyi ve elle duraklatmayı devre dışı bırakır. Art arda atlama sınırına ulaşılmadıkça acil çıkış kullanılabilir."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "严格模式禁用跳过、推迟和手动暂停。除非已达到连续跳过上限，否则仍可紧急退出。"
+          }
+        }
+      }
+    },
     "Rest & Recall": {
       "extractionState": "manual",
       "localizations": {

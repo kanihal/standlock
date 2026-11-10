@@ -23,7 +23,7 @@ public enum DisciplineLevel: String, Codable, Sendable, CaseIterable {
         switch self {
         case .gentle: "Quiet full-screen rest with emergency escape"
         case .firm: "Quiet full-screen rest with a longer emergency hold"
-        case .strict: "Full input blocking with emergency escape combo"
+        case .strict: "Input blocked; no skipping or pausing. Emergency escape only."
         }
     }
 }
