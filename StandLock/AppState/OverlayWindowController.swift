@@ -7,6 +7,8 @@ import Locking
 final class OverlayWindowController: LockPresenting {
     private var overlayWindows: [BreakOverlayWindow] = []
     private var eventTapController: EventTapController?
+    private var emergencyMonitor: EmergencyComboMonitor?
+    private var emergencyHoldTask: Task<Void, Never>?
     private var screenObserver: NSObjectProtocol?
     private var focusTimer: Timer?
     private let mediaController = MediaController()
@@ -68,16 +70,7 @@ final class OverlayWindowController: LockPresenting {
         )
         for screen in NSScreen.screens {
             let window = BreakOverlayWindow(screen: screen, palette: look.palette, appearance: look.appearance)
-            let contentView = ManuscriptBreakView(
-                level: level, look: look, totalDuration: duration,
-                exercise: exercise, preferences: preferences,
-                statistics: statistics, escalationTier: escalationTier,
-                nextIntervalLabel: nextIntervalLabel,
-                canPostpone: canPostpone, dismissalState: dismissalState,
-                onSkip: { [weak self] in self?.onSkip?(breakID) },
-                onPostpone: { [weak self] in self?.onPostpone?(breakID) },
-                onEscape: { [weak self] in self?.onEscape?(breakID) }
-            )
+            let contentView = ManuscriptBreakView(look: look, totalDuration: duration)
             window.setContent(LocalizedRoot(store: languageStore) { contentView })
             window.orderFrontRegardless()
             overlayWindows.append(window)
@@ -96,6 +89,8 @@ final class OverlayWindowController: LockPresenting {
 
         if level == .strict {
             startEventTap(preferences: preferences, breakID: breakID)
+        } else {
+            updateEmergencyMonitor()
         }
 
         forceFocus()
@@ -118,6 +113,10 @@ final class OverlayWindowController: LockPresenting {
         focusTimer = nil
         eventTapController?.stop()
         eventTapController = nil
+        emergencyHoldTask?.cancel()
+        emergencyHoldTask = nil
+        emergencyMonitor?.stop()
+        emergencyMonitor = nil
 
         let windows = overlayWindows
         overlayWindows.removeAll()
@@ -137,6 +136,38 @@ final class OverlayWindowController: LockPresenting {
     func updateDismissalAvailability(_ availability: DismissalAvailability) {
         dismissalState.availability = availability
         eventTapController?.escapeEnabled = availability.emergencyEscapeAllowed
+        if currentLevel != .strict { updateEmergencyMonitor() }
+    }
+
+    private func updateEmergencyMonitor() {
+        guard isShowing, dismissalState.availability.emergencyEscapeAllowed else {
+            emergencyHoldTask?.cancel()
+            emergencyHoldTask = nil
+            emergencyMonitor?.stop()
+            emergencyMonitor = nil
+            return
+        }
+        guard emergencyMonitor == nil, let id = currentBreakID else { return }
+        let preferences = currentPreferences ?? AppPreferences()
+        let hold = (currentLevel ?? .gentle).enforcementPolicy(preferences: preferences)
+            .tier(at: currentEscalationTier).quietEscapeHoldDuration
+        let monitor = EmergencyComboMonitor()
+        monitor.onActivated = { [weak self] in
+            guard let self, self.emergencyHoldTask == nil else { return }
+            self.emergencyHoldTask = Task { [weak self] in
+                do { try await Task.sleep(for: .seconds(hold)) }
+                catch { return }
+                guard !Task.isCancelled, let self, self.isShowing, self.currentBreakID == id,
+                      self.dismissalState.availability.emergencyEscapeAllowed else { return }
+                self.onEscape?(id)
+            }
+        }
+        monitor.onDeactivated = { [weak self] in
+            self?.emergencyHoldTask?.cancel()
+            self?.emergencyHoldTask = nil
+        }
+        emergencyMonitor = monitor
+        monitor.start()
     }
 
     private func startEventTap(preferences: AppPreferences, breakID: UUID) {

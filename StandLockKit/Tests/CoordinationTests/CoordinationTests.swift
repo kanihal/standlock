@@ -2498,12 +2498,13 @@ struct BreakCoordinatorPostponeTests {
     }
 
     @Test
-    func postponedBreakIsNotSavedAcrossRelaunch() throws {
-        let state = EnforcementState(postponedScheduleID: UUID())
+    func postponedBreakIsSavedAcrossRelaunch() throws {
+        let id = UUID()
+        let state = EnforcementState(postponedScheduleID: id)
         let decoded = try JSONDecoder().decode(
             EnforcementState.self, from: JSONEncoder().encode(state)
         )
-        #expect(decoded.postponedScheduleID == nil)
+        #expect(decoded.postponedScheduleID == id)
     }
 }
 

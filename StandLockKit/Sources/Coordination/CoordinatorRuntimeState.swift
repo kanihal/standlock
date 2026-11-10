@@ -16,4 +16,12 @@ struct CoordinatorRuntimeState: Sendable {
     var postponedBreak: BreakEvent?
     var pauseDeadline: Date?
     var deferredScheduleID: UUID?
+    var dormantBreaks: [UUID: InterruptedBreak]
+    var terminationPromptIsShowing: Bool
+    var terminationPromptOwnerID: UUID?
+    var terminationPromptRemainingWork: [UUID: TimeInterval]
+    var persistenceIsPending: Bool
+    var pendingOverlayDismissal: Bool
+    var pendingPresentationRemaining: TimeInterval?
+    var queuedEvents: [CoordinatorEvent]
 }

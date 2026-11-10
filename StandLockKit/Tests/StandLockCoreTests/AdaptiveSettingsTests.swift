@@ -34,7 +34,7 @@ struct AdaptiveSettingsTests {
         #expect(throws: SettingsImportError.unreadable) { try SettingsExport.decode(data) }
     }
 
-    @Test(arguments: [0, 21]) func invalidCapCannotBeImported(_ cap: Int) throws {
+    @Test(arguments: [-1, 21]) func invalidCapCannotBeImported(_ cap: Int) throws {
         var draft = ScheduleDraft(schedule: nil)
         draft.name = "Work"
         var schedule = draft.build(existing: nil)
@@ -42,5 +42,17 @@ struct AdaptiveSettingsTests {
         let export = SettingsExport(preferences: AppPreferences(), schedules: [schedule], theme: nil, language: nil, showHelp: true)
         let data = try export.encoded()
         #expect(throws: SettingsImportError.unreadable) { try SettingsExport.decode(data) }
+    }
+
+    @Test func zeroCapSurvivesDraftAndSettingsRoundTrip() throws {
+        var draft = ScheduleDraft(schedule: nil)
+        draft.name = "No skips"
+        draft.consecutiveSkipLimit = 0
+        let schedule = draft.build(existing: nil)
+        #expect(schedule.consecutiveSkipLimit == 0)
+        #expect(ScheduleDraft(schedule: schedule).consecutiveSkipLimit == 0)
+        let export = SettingsExport(preferences: AppPreferences(), schedules: [schedule], theme: nil, language: nil, showHelp: true)
+        let restored = try SettingsExport.decode(export.encoded())
+        #expect(restored.schedules.first?.consecutiveSkipLimit == 0)
     }
 }

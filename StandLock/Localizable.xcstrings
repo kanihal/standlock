@@ -1,6 +1,159 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Rest & Recall": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dinlen ve Hatırla"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "休息与回想"
+          }
+        }
+      }
+    },
+    "Break time remaining": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kalan mola süresi"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "休息剩余时间"
+          }
+        }
+      }
+    },
+    "Zero disables skipping, emergency escape, postponing, and manual pauses.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sıfır; atlamayı, acil çıkışı, ertelemeyi ve elle duraklatmayı devre dışı bırakır."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "设为 0 将禁用跳过、紧急退出、推迟和手动暂停。"
+          }
+        }
+      }
+    },
+    "Set to 0 to disable skipping and manual pauses. Higher limits reset after a completed break or enough time away.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Atlamayı ve elle duraklatmayı kapatmak için 0 seçin. Daha yüksek sınırlar, tamamlanan bir mola veya yeterince uzun bir uzaklaşmadan sonra sıfırlanır."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "设为 0 可禁用跳过和手动暂停。大于 0 的限额会在完成休息或离开足够时间后重置。"
+          }
+        }
+      }
+    },
+    "Every break shows only Rest & Recall and a small countdown in the bottom-right corner.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Her molada yalnızca Dinlen ve Hatırla yazısı ile sağ alt köşede küçük bir geri sayım gösterilir."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "每次休息仅显示“休息与回想”，以及右下角的小型倒计时。"
+          }
+        }
+      }
+    },
+    "Quiet full-screen rest with emergency escape": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Acil çıkışlı, sakin tam ekran mola"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "安静的全屏休息，支持紧急退出"
+          }
+        }
+      }
+    },
+    "Quiet full-screen rest with a longer emergency hold": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Acil çıkış için daha uzun basılı tutma gerektiren sakin tam ekran mola"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "安静的全屏休息，紧急退出需按住更久"
+          }
+        }
+      }
+    },
+    "Zero skips": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Atlama yok"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不允许跳过"
+          }
+        }
+      }
+    },
+    "Hard block": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tam engelleme"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "强制休息"
+          }
+        }
+      }
+    },
     "Long break time": {
       "extractionState": "manual",
       "localizations": {

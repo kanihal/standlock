@@ -1100,54 +1100,13 @@ private struct SlotMachineDismissView: View {
 
 // MARK: - Emergency Escape
 
-private final class ComboMonitor: ObservableObject, @unchecked Sendable {
-    var onActivated: (() -> Void)?
-    var onDeactivated: (() -> Void)?
-    private var localToken: Any?
-    private var globalToken: Any?
-
-    func start() {
-        guard localToken == nil else { return }
-        let required: NSEvent.ModifierFlags = [.control, .option, .command]
-
-        localToken = NSEvent.addLocalMonitorForEvents(matching: .flagsChanged) { [weak self] event in
-            if event.modifierFlags.intersection(required) == required {
-                self?.onActivated?()
-            } else {
-                self?.onDeactivated?()
-            }
-            return event
-        }
-
-        // Global monitor catches flagsChanged when the app isn't the active app.
-        // flagsChanged does not require Input Monitoring permission.
-        globalToken = NSEvent.addGlobalMonitorForEvents(matching: .flagsChanged) { [weak self] event in
-            let matched = event.modifierFlags.intersection(required) == required
-            DispatchQueue.main.async { [weak self] in
-                matched ? self?.onActivated?() : self?.onDeactivated?()
-            }
-        }
-    }
-
-    func stop() {
-        if let t = localToken { NSEvent.removeMonitor(t) }
-        if let t = globalToken { NSEvent.removeMonitor(t) }
-        localToken = nil
-        globalToken = nil
-    }
-
-    deinit {
-        if let t = localToken { NSEvent.removeMonitor(t) }
-        if let t = globalToken { NSEvent.removeMonitor(t) }
-    }
-}
 
 private struct EmergencyEscapeView: View {
     let palette: BreakPalette
     let onEscape: () -> Void
     private let holdSeconds = 30
 
-    @StateObject private var monitor = ComboMonitor()
+    @StateObject private var monitor = EmergencyComboMonitor()
     @State private var holding = false
 
     var body: some View {

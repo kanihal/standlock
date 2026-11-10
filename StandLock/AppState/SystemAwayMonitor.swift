@@ -16,6 +16,12 @@ final class SystemAwayMonitor {
     private var locked: Bool?
     private var sleeping = false
     private var onChange: ((AwaySessionTracker.Reason, Bool) -> Void)?
+    var confirmedReasons: Set<AwaySessionTracker.Reason> {
+        var result: Set<AwaySessionTracker.Reason> = []
+        if locked == true { result.insert(.locked) }
+        if sleeping { result.insert(.sleeping) }
+        return result
+    }
 
     func start(onChange: @escaping (AwaySessionTracker.Reason, Bool) -> Void) {
         self.onChange = onChange

@@ -90,7 +90,7 @@ public struct SettingsExport: Codable, Sendable, Equatable {
             let durations = [schedule.breakInterval, schedule.breakDuration]
                 + (schedule.intervalCycle ?? []).map(\.duration)
                 + [schedule.repetitionRule?.shortBreakDuration, schedule.repetitionRule?.longBreakDuration].compactMap { $0 }
-            return schedule.consecutiveSkipLimit.map { (1...20).contains($0) } != false
+            return schedule.consecutiveSkipLimit.map { (0...20).contains($0) } != false
                 && durations.allSatisfy { $0.isFinite && $0 > 0 && $0 <= Self.maxDuration }
                 && (0...Self.maxCount).contains(schedule.repetitionRule?.shortBreakCount ?? 0)
                 && schedule.windows.allSatisfy { window in

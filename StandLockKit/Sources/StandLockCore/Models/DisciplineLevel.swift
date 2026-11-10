@@ -21,8 +21,8 @@ public enum DisciplineLevel: String, Codable, Sendable, CaseIterable {
 
     public var description: String {
         switch self {
-        case .gentle: "Full-screen overlay with immediate skip button"
-        case .firm: "Overlay with delayed skip and phrase-to-escape"
+        case .gentle: "Quiet full-screen rest with emergency escape"
+        case .firm: "Quiet full-screen rest with a longer emergency hold"
         case .strict: "Full input blocking with emergency escape combo"
         }
     }

@@ -63,7 +63,7 @@ extension SettingsPage {
         case .breakScreen:
             [
                 "Break Screen", "Look", "Custom Break Colors", "Background", "Text", "Preview", "Content",
-                "Show Statistics", "Break Message", "During a break", "Pause Media",
+                "Rest & Recall", "During a break", "Pause Media",
                 "Sound when a break ends", "Sound before a break",
             ]
         case .discipline:
@@ -100,7 +100,7 @@ extension SettingsPage {
         "Schedules", "Enabled", "Name", "When", "Hours", "Rhythm", "Break every", "Break lasts",
         "Alternating intervals", "Repetition Cycle", "Short breaks", "Short break", "Long break", "Discipline",
         "Gentle", "Firm", "Strict", "Progressive Enforcement", "Limit consecutive skips",
-        "Maximum consecutive skips", "Your day",
+        "Maximum consecutive skips", "Zero skips", "Hard block", "Your day",
         "Vary work intervals", "Add longer breaks", "Work duration", "Short break duration",
         "Short breaks before a longer break", "Longer break duration", "24-hour day", "Clock",
         "Short break time", "Long break time",

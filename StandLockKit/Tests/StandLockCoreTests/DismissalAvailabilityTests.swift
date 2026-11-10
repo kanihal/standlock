@@ -25,4 +25,21 @@ struct DismissalAvailabilityTests {
         #expect(result.normalSkipAllowed && result.emergencyEscapeAllowed)
         #expect(result.remainingConsecutiveSkips == nil)
     }
+
+    @Test(arguments: [false, true])
+    func zeroDisablesAllDismissalsEvenWithoutProgressiveEscalation(progressive: Bool) {
+        let result = DismissalAvailability(progressiveEnforcement: progressive, consecutiveSkipLimit: 0)
+        #expect(!result.normalSkipAllowed)
+        #expect(!result.emergencyEscapeAllowed)
+        #expect(result.remainingConsecutiveSkips == 0)
+    }
+
+    @Test func quietEscapeStillEscalatesWithoutOnscreenChallenges() {
+        let preferences = AppPreferences()
+        #expect(DisciplineLevel.gentle.enforcementPolicy(preferences: preferences).tier(at: 0).quietEscapeHoldDuration == 30)
+        #expect(DisciplineLevel.gentle.enforcementPolicy(preferences: preferences).tier(at: 2).quietEscapeHoldDuration == 40)
+        #expect(DisciplineLevel.firm.enforcementPolicy(preferences: preferences).tier(at: 0).quietEscapeHoldDuration == 40)
+        #expect(DisciplineLevel.strict.enforcementPolicy(preferences: preferences).tier(at: 0).quietEscapeHoldDuration == 10)
+        #expect(DisciplineLevel.strict.enforcementPolicy(preferences: preferences).tier(at: 3).quietEscapeHoldDuration == 25)
+    }
 }

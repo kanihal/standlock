@@ -33,7 +33,7 @@ struct QuickActionsView: View {
                     pill("Pause", symbol: "pause.circle")
                 }
                 .buttonStyle(MenuBarPillStyle())
-                .disabled(coordinator.schedules.isEmpty)
+                .disabled(coordinator.schedules.isEmpty || !coordinator.canPauseScheduling)
             }
 
             iconButton("About StandLock", symbol: "info.circle") {
@@ -55,6 +55,7 @@ struct QuickActionsView: View {
                 }
             }
         }
+        .onAppear { coordinator.refreshDismissalAvailability() }
     }
 
     private func iconButton(_ title: LocalizedStringKey, symbol: String, action: @escaping () -> Void) -> some View {
@@ -79,6 +80,7 @@ struct QuickActionsView: View {
     }
 
     private func showPauseMenu() {
+        guard coordinator.canPauseScheduling else { return }
         let handler = PauseMenuHandler(coordinator: coordinator)
         let menu = NSMenu()
 

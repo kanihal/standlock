@@ -134,7 +134,7 @@ public struct ScheduleDraft: Equatable, Sendable {
             disciplineLevel: disciplineLevel,
             dailyBreakCap: existing?.dailyBreakCap,
             progressiveEnforcement: progressiveEnforcement,
-            consecutiveSkipLimit: consecutiveSkipLimit.map { Self.clamped($0, to: 1...20) }
+            consecutiveSkipLimit: consecutiveSkipLimit.map { Self.clamped($0, to: 0...20) }
         )
     }
 

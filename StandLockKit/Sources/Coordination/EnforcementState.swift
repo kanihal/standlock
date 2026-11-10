@@ -18,21 +18,21 @@ public struct EnforcementState: Codable, Sendable {
     /// which break fires, and because a disabled schedule's slot has to wait out the rebuilds
     /// that exclude it: switching a schedule off and on again must not buy a fresh interval.
     public var pendingBreakDates: [UUID: Date]
-    /// The schedule whose break was postponed and is still owed. Carried across a rebuild so a
-    /// schedule edit during the wait cannot drop the break, but left out of `CodingKeys`: a
-    /// postponed break does not survive a quit.
+    /// The schedule whose break was postponed and is still owed. Legacy snapshots may omit it.
     public var postponedScheduleID: UUID?
     public var consecutiveDismissalCounts: [UUID: Int]
+    public var recovery: BreakRecoveryState?
     var runtime: CoordinatorRuntimeState?
 
     private enum CodingKeys: String, CodingKey {
         case dailyBreakCounts, escalationTiers, cycleIndices, repetitionIndices, pendingBreakDates, consecutiveDismissalCounts
+        case postponedScheduleID, recovery
     }
 
     public init(dailyBreakCounts: [UUID: Int] = [:], escalationTiers: [UUID: Int] = [:],
                 cycleIndices: [UUID: Int] = [:], repetitionIndices: [UUID: Int] = [:],
                 pendingBreakDates: [UUID: Date] = [:], postponedScheduleID: UUID? = nil,
-                consecutiveDismissalCounts: [UUID: Int] = [:]) {
+                consecutiveDismissalCounts: [UUID: Int] = [:], recovery: BreakRecoveryState? = nil) {
         self.dailyBreakCounts = dailyBreakCounts
         self.escalationTiers = escalationTiers
         self.cycleIndices = cycleIndices
@@ -40,6 +40,7 @@ public struct EnforcementState: Codable, Sendable {
         self.pendingBreakDates = pendingBreakDates
         self.postponedScheduleID = postponedScheduleID
         self.consecutiveDismissalCounts = consecutiveDismissalCounts
+        self.recovery = recovery
     }
 
     public init(from decoder: Decoder) throws {
@@ -50,6 +51,8 @@ public struct EnforcementState: Codable, Sendable {
         repetitionIndices = try c.decodeIfPresent([UUID: Int].self, forKey: .repetitionIndices) ?? [:]
         pendingBreakDates = try c.decodeIfPresent([UUID: Date].self, forKey: .pendingBreakDates) ?? [:]
         consecutiveDismissalCounts = try c.decodeIfPresent([UUID: Int].self, forKey: .consecutiveDismissalCounts) ?? [:]
+        postponedScheduleID = try c.decodeIfPresent(UUID.self, forKey: .postponedScheduleID)
+        recovery = try c.decodeIfPresent(BreakRecoveryState.self, forKey: .recovery)
     }
 
     /// Lifetime streaks, short-break runs and observed absences are independent of the day.

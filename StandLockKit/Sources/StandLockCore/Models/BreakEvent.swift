@@ -1,6 +1,6 @@
 import Foundation
 
-public struct BreakEvent: Sendable, Identifiable {
+public struct BreakEvent: Codable, Sendable, Identifiable {
     public let id: UUID
     public let scheduledAt: Date
     public let duration: TimeInterval
