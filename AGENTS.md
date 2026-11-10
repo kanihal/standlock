@@ -3,6 +3,7 @@
 Read [CONTRIBUTING.md](CONTRIBUTING.md) before changing anything. It covers setup, tests, code rules and pull request expectations. The points below are the ones agents get wrong most often.
 
 - Always commit changes directly to `main`.
+- Build and install with Jagadeesha K's developer account: team `N6783MMBTD`, signing identity `Developer ID Application: Jagadeesha K (N6783MMBTD)`. Pass these as `xcodebuild` overrides with `CODE_SIGN_STYLE=Manual` so local builds use this account without changing the shared project signing settings.
 - Most logic lives in `StandLockKit`, a plain Swift package. Put new logic there, not in the app target, so it stays testable.
 - Run `swift test --package-path StandLockKit` before you finish. A bug fix needs a regression test that fails before the fix.
 - If the suite dies with `signal code 11` after a model change, run `swift package clean --package-path StandLockKit` and retry.
