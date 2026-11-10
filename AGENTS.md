@@ -2,6 +2,7 @@
 
 Read [CONTRIBUTING.md](CONTRIBUTING.md) before changing anything. It covers setup, tests, code rules and pull request expectations. The points below are the ones agents get wrong most often.
 
+- Always commit changes directly to `main`.
 - Most logic lives in `StandLockKit`, a plain Swift package. Put new logic there, not in the app target, so it stays testable.
 - Run `swift test --package-path StandLockKit` before you finish. A bug fix needs a regression test that fails before the fix.
 - If the suite dies with `signal code 11` after a model change, run `swift package clean --package-path StandLockKit` and retry.
