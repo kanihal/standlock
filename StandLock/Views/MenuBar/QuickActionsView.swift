@@ -5,7 +5,6 @@ struct QuickActionsView: View {
     @EnvironmentObject private var coordinator: AppCoordinator
     @EnvironmentObject private var languageStore: LanguageStore
     @Environment(\.openWindow) private var openWindow
-    @State private var isConfirmingQuit = false
 
     var body: some View {
         // Tight spacing leaves the two equal pills room for the longest title, Turkish "Duraklat".
@@ -42,17 +41,6 @@ struct QuickActionsView: View {
 
             iconButton("Settings", symbol: "gearshape") {
                 coordinator.settingsNavigation.open(.general, using: openWindow)
-            }
-
-            iconButton("Quit standlock - block timer", symbol: "power") {
-                isConfirmingQuit = true
-            }
-            .disabled(coordinator.isBreakActive)
-            .popover(isPresented: $isConfirmingQuit, arrowEdge: .bottom) {
-                // A popover is a new hosting root, so the language does not reach it otherwise.
-                LocalizedRoot(store: languageStore) {
-                    QuitConfirmationView(cancel: { isConfirmingQuit = false }, quit: { NSApp.terminate(nil) })
-                }
             }
         }
         .onAppear { coordinator.refreshDismissalAvailability() }
