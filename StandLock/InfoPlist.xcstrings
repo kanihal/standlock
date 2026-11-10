@@ -8,7 +8,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "StandLock Debug"
+            "value" : "standlock - block timer Debug"
           }
         }
       }
@@ -20,7 +20,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "StandLock"
+            "value" : "standlock - block timer"
           }
         }
       }
@@ -32,19 +32,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "StandLock uses accessibility to block keyboard and mouse input during breaks in Strict mode."
+            "value" : "standlock - block timer uses accessibility to block keyboard and mouse input during breaks in Strict mode."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "StandLock, Katı modda molalar sırasında klavye ve fare girdisini engellemek için erişilebilirliği kullanır."
+            "value" : "standlock - block timer, Katı modda molalar sırasında klavye ve fare girdisini engellemek için erişilebilirliği kullanır."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "StandLock 使用辅助功能，在强制模式的休息期间屏蔽键盘和鼠标输入。"
+            "value" : "standlock - block timer 使用辅助功能，在强制模式的休息期间屏蔽键盘和鼠标输入。"
           }
         }
       }
@@ -56,19 +56,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "StandLock reads your calendar to defer breaks during meetings."
+            "value" : "standlock - block timer reads your calendar to defer breaks during meetings."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "StandLock, toplantılarda molaları ertelemek için takviminizi okur."
+            "value" : "standlock - block timer, toplantılarda molaları ertelemek için takviminizi okur."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "StandLock 读取你的日历，以便在会议期间推迟休息。"
+            "value" : "standlock - block timer 读取你的日历，以便在会议期间推迟休息。"
           }
         }
       }
@@ -80,19 +80,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "StandLock reads your calendar to defer breaks during meetings."
+            "value" : "standlock - block timer reads your calendar to defer breaks during meetings."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "StandLock, toplantılarda molaları ertelemek için takviminizi okur."
+            "value" : "standlock - block timer, toplantılarda molaları ertelemek için takviminizi okur."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "StandLock 读取你的日历，以便在会议期间推迟休息。"
+            "value" : "standlock - block timer 读取你的日历，以便在会议期间推迟休息。"
           }
         }
       }

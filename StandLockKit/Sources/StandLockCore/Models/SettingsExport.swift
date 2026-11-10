@@ -79,17 +79,24 @@ public struct SettingsExport: Codable, Sendable, Equatable {
     /// schedules can sit outside them, such as sub-minute intervals.
     private var isRunnable: Bool {
         let p = preferences
-        guard Set(schedules.map(\.id)).count == schedules.count,
-              [p.firmSkipDelay, p.strictEscapeHoldDuration, p.postponeReturnDelay]
+        guard (1...30).contains(p.naturalBreakThresholdMinutes),
+              Set(schedules.map(\.id)).count == schedules.count,
+              p.strictEscapeHoldDuration.isFinite,
+              (0...BreakSafety.maximumEscapeHoldDuration).contains(p.strictEscapeHoldDuration),
+              p.firmSkipDelay <= BreakSafety.maximumSkipDelay,
+              [p.firmSkipDelay, p.postponeReturnDelay]
                   .allSatisfy({ $0.isFinite && (0...Self.maxDuration).contains($0) }),
               [p.gentleDailySkipLimit, p.firmDailySkipLimit, p.menuBarCountdownMinutes, p.calendarLookAheadMinutes]
                   .allSatisfy({ (0...Self.maxCount).contains($0) })
         else { return false }
         return schedules.allSatisfy { schedule in
-            let durations = [schedule.breakInterval, schedule.breakDuration]
+            let intervals = [schedule.breakInterval]
                 + (schedule.intervalCycle ?? []).map(\.duration)
+            let breaks = [schedule.breakDuration]
                 + [schedule.repetitionRule?.shortBreakDuration, schedule.repetitionRule?.longBreakDuration].compactMap { $0 }
-            return durations.allSatisfy { $0.isFinite && $0 > 0 && $0 <= Self.maxDuration }
+            return schedule.consecutiveSkipLimit.map { (0...20).contains($0) } != false
+                && intervals.allSatisfy { $0.isFinite && $0 > 0 && $0 <= Self.maxDuration }
+                && breaks.allSatisfy { $0.isFinite && $0 > 0 && $0 <= BreakSafety.maximumBreakDuration }
                 && (0...Self.maxCount).contains(schedule.repetitionRule?.shortBreakCount ?? 0)
                 && schedule.windows.allSatisfy { window in
                     (0...23).contains(window.startHour) && (0...23).contains(window.endHour)

@@ -20,6 +20,8 @@ final class SettingsNavigation: ObservableObject {
     /// Set by the schedule page and asked at the moment of a selection. A flag kept by `onChange`
     /// would be a turn late: a measured edit followed by a row change on one turn went through.
     var unsavedEdits: (() -> Bool)?
+    var onQuitConfirmed: (() -> Void)?
+    var onQuitCancelled: (() -> Void)?
     private weak var closingWindow: NSWindow?
     /// Fires when Settings is opened from outside it. The scene keeps the closed window, so its
     /// views never reappear.
@@ -76,6 +78,7 @@ final class SettingsNavigation: ObservableObject {
     }
 
     func cancelPending() {
+        if case .quit = pendingLeave { onQuitCancelled?() }
         pendingLeave = nil
     }
 
@@ -113,7 +116,10 @@ final class SettingsNavigation: ObservableObject {
         case .quit:
             pendingLeave = nil
             // A later turn for the same reason: quitting is refused under a sheet too.
-            DispatchQueue.main.async { NSApp.terminate(nil) }
+            DispatchQueue.main.async { [weak self] in
+                if let onQuitConfirmed = self?.onQuitConfirmed { onQuitConfirmed() }
+                else { NSApp.terminate(nil) }
+            }
         }
     }
 

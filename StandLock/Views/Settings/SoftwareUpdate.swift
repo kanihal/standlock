@@ -167,7 +167,7 @@ struct UpdateStatusRow: View {
     private func title(for status: UpdateStatus) -> LocalizedStringKey {
         switch status {
         case .available(let version): "v\(version) available"
-        case .upToDate: "StandLock is up to date"
+        case .upToDate: "standlock - block timer is up to date"
         case .checked: "Last checked"
         case .neverChecked: "Not checked yet"
         case .upgrading: "Updating with Homebrew…"

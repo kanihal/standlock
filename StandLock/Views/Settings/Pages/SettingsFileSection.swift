@@ -93,7 +93,7 @@ struct SettingsFileSection: View {
         }
         let panel = NSSavePanel()
         panel.allowedContentTypes = [.json]
-        panel.nameFieldStringValue = languageStore.string("StandLock Settings") + ".json"
+        panel.nameFieldStringValue = languageStore.string("standlock - block timer Settings") + ".json"
         panel.beginSheetModal(for: window) { response in
             guard response == .OK, let url = panel.url else { return }
             do {
@@ -112,7 +112,7 @@ struct SettingsFileSection: View {
         panel.canChooseDirectories = false
         panel.beginSheetModal(for: window) { response in
             guard response == .OK, let url = panel.url else { return }
-            show(read(url))
+            Task { show(await read(url)) }
         }
     }
 
@@ -121,11 +121,14 @@ struct SettingsFileSection: View {
         DispatchQueue.main.async { prompt = next }
     }
 
-    private func read(_ url: URL) -> Prompt {
+    private func read(_ url: URL) async -> Prompt {
         let error: SettingsImportError
         do {
+            let decoded = try await Task.detached(priority: .userInitiated) {
+                try SettingsFileReader.read(from: url)
+            }.value
             let current = current
-            let imported = try SettingsExport.decode(Data(contentsOf: url)).keepingKnownChoices(
+            let imported = decoded.keepingKnownChoices(
                 languages: languageStore.available,
                 themes: themeStore.available.map(\.id),
                 current: current
@@ -154,11 +157,11 @@ struct SettingsFileSection: View {
     private func message(for error: SettingsImportError) -> String {
         switch error {
         case .notSettingsFile:
-            languageStore.string("This file is not a StandLock settings file.")
+            languageStore.string("This file is not a standlock - block timer settings file.")
         case .newerVersion:
-            languageStore.string("This file was made by a newer version of StandLock. Update StandLock to import it.")
+            languageStore.string("This file was made by a newer version of standlock - block timer. Update standlock - block timer to import it.")
         case .unreadable:
-            languageStore.string("This file could not be read. It may be damaged or made by a newer version of StandLock.")
+            languageStore.string("This file could not be read. It may be damaged or made by a newer version of standlock - block timer.")
         }
     }
 

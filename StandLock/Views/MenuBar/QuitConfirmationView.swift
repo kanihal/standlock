@@ -9,9 +9,9 @@ struct QuitConfirmationView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             VStack(alignment: .leading, spacing: 4) {
-                Text("Quit StandLock?")
+                Text("Quit standlock - block timer?")
                     .font(.headline)
-                Text("You won't get break reminders until you open StandLock again.")
+                Text("You won't get break reminders until you open standlock - block timer again.")
                     .font(.callout)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)

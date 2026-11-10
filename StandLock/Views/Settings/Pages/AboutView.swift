@@ -62,7 +62,7 @@ struct AboutView: View {
                 .clipShape(.rect(cornerRadius: SettingsTokens.identityIconRadius))
                 .accessibilityHidden(true)
 
-            Text("StandLock")
+            Text("standlock - block timer")
                 .font(SettingsTokens.pageTitleFont)
 
             Text("Version \(version) (Build \(build))")

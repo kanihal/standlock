@@ -40,12 +40,17 @@ final class MockLocker: LockPresenting, @unchecked Sendable {
     var lastEscalationTier: Int?
     var lastNextIntervalLabel: String?
     var lastCanPostpone: Bool?
+    var lastBreakID: UUID?
+    var lastAvailability = DismissalAvailability()
     var isShowing = false
 
     func showOverlay(level: DisciplineLevel, duration: TimeInterval,
                      exercise: Exercise?, preferences: AppPreferences,
                      statistics: BreakStatistics, escalationTier: Int,
-                     nextIntervalLabel: String?, canPostpone: Bool) {
+                     nextIntervalLabel: String?, canPostpone: Bool,
+                     breakID: UUID, dismissalAvailability: DismissalAvailability) {
+        lastBreakID = breakID
+        lastAvailability = dismissalAvailability
         showOverlayCalled = true
         lastLevel = level
         lastDuration = duration
@@ -55,6 +60,8 @@ final class MockLocker: LockPresenting, @unchecked Sendable {
         lastCanPostpone = canPostpone
         isShowing = true
     }
+
+    func updateDismissalAvailability(_ availability: DismissalAvailability) { lastAvailability = availability }
 
     func dismissOverlay() {
         dismissOverlayCalled = true
@@ -102,6 +109,54 @@ func waitUntil(_ condition: () -> Bool) async -> Bool {
 
 @Suite("BreakCoordinator Tests")
 struct BreakCoordinatorTests {
+
+    @Test(arguments: [false, true]) @MainActor
+    func unsafeStoredBreakIsBoundedAtPresentation(repeating: Bool) async {
+        let scheduler = MockScheduler()
+        scheduler.nextBreakTimeToReturn = Date().addingTimeInterval(0.01)
+        let locker = MockLocker()
+        let coordinator = BreakCoordinator(scheduler: scheduler, detector: MockDetector(), locker: locker)
+        defer { coordinator.stop() }
+        let duration: TimeInterval = 366 * 86_400
+        let rule = repeating ? RepetitionRule(
+            shortBreakCount: 1, shortBreakDuration: duration, longBreakDuration: duration
+        ) : nil
+        let schedule = makeSchedule(level: .strict, breakDuration: duration, repetitionRule: rule)
+
+        coordinator.start(with: [schedule], preferences: AppPreferences())
+
+        #expect(await waitUntil { locker.showOverlayCalled })
+        #expect(locker.lastDuration == 3600)
+        if repeating {
+            locker.showOverlayCalled = false
+            coordinator.completeActiveBreak()
+            #expect(await waitUntil { locker.showOverlayCalled })
+            #expect(locker.lastDuration == 3600)
+        }
+    }
+
+    @Test @MainActor
+    func emergencyEscapeLeavesTimeToRecoverFromTinyIntervals() async {
+        let locker = MockLocker()
+        let coordinator = BreakCoordinator(scheduler: ScheduleEvaluator(), detector: MockDetector(), locker: locker)
+        defer { coordinator.stop() }
+        var schedule = makeSchedule(level: .strict, breakInterval: 1e-300, breakDuration: 3600)
+        schedule.windows = [
+            TimeWindow(startHour: 0, startMinute: 0, endHour: 12, endMinute: 0),
+            TimeWindow(startHour: 12, startMinute: 0, endHour: 0, endMinute: 0),
+        ]
+        coordinator.start(with: [schedule], preferences: AppPreferences())
+        #expect(await waitUntil { locker.showOverlayCalled })
+
+        locker.showOverlayCalled = false
+        let escapedAt = Date()
+        coordinator.escapeActiveBreak()
+
+        let next = coordinator.captureEnforcementState().pendingBreakDates[schedule.id]
+        #expect(next.map { $0.timeIntervalSince(escapedAt) >= 59 } == true)
+        try? await Task.sleep(for: .milliseconds(50))
+        #expect(!locker.showOverlayCalled)
+    }
 
     @Test @MainActor
     func breakTriggersAtScheduledTime() async {
@@ -347,7 +402,7 @@ struct BreakCoordinatorTests {
     }
 
     @Test @MainActor
-    func idleCountsAsBreak() async {
+    func unlockedIdleDoesNotCountAsBreak() async {
         let scheduler = MockScheduler()
         scheduler.nextBreakTimeToReturn = Date().addingTimeInterval(0.05)
         let detector = MockDetector()
@@ -356,36 +411,7 @@ struct BreakCoordinatorTests {
 
         let coordinator = BreakCoordinator(scheduler: scheduler, detector: detector, locker: locker)
         let schedule = makeSchedule(breakDuration: 300)
-        let prefs = AppPreferences(idleDetectionEnabled: true)
-
-        var completedEvents: [CoordinatorEvent] = []
-        let listener = Task {
-            for await event in coordinator.events {
-                if case .breakCompleted = event { completedEvents.append(event) }
-            }
-        }
-
-        coordinator.start(with: [schedule], preferences: prefs)
-        try? await Task.sleep(for: .milliseconds(300))
-
-        #expect(!locker.showOverlayCalled)
-        #expect(!completedEvents.isEmpty)
-
-        coordinator.stop()
-        listener.cancel()
-    }
-
-    @Test @MainActor
-    func shortBreakIsNotSwallowedByShortIdle() async {
-        let scheduler = MockScheduler()
-        scheduler.nextBreakTimeToReturn = Date().addingTimeInterval(0.05)
-        let detector = MockDetector()
-        detector.contextToReturn = DetectionContext(idleDuration: 45)
-        let locker = MockLocker()
-
-        let coordinator = BreakCoordinator(scheduler: scheduler, detector: detector, locker: locker)
-        let schedule = makeSchedule(breakDuration: 30)
-        let prefs = AppPreferences(idleDetectionEnabled: true)
+        let prefs = AppPreferences(naturalBreakThresholdMinutes: 5)
 
         var completedEvents: [CoordinatorEvent] = []
         let listener = Task {
@@ -405,16 +431,16 @@ struct BreakCoordinatorTests {
     }
 
     @Test @MainActor
-    func shortBreakStillCountsAfterMinuteIdle() async {
+    func shortBreakIsNotSwallowedByShortIdle() async {
         let scheduler = MockScheduler()
         scheduler.nextBreakTimeToReturn = Date().addingTimeInterval(0.05)
         let detector = MockDetector()
-        detector.contextToReturn = DetectionContext(idleDuration: 90)
+        detector.contextToReturn = DetectionContext(idleDuration: 45)
         let locker = MockLocker()
 
         let coordinator = BreakCoordinator(scheduler: scheduler, detector: detector, locker: locker)
         let schedule = makeSchedule(breakDuration: 30)
-        let prefs = AppPreferences(idleDetectionEnabled: true)
+        let prefs = AppPreferences(naturalBreakThresholdMinutes: 5)
 
         var completedEvents: [CoordinatorEvent] = []
         let listener = Task {
@@ -426,8 +452,37 @@ struct BreakCoordinatorTests {
         coordinator.start(with: [schedule], preferences: prefs)
         try? await Task.sleep(for: .milliseconds(300))
 
-        #expect(!locker.showOverlayCalled)
-        #expect(!completedEvents.isEmpty)
+        #expect(locker.showOverlayCalled)
+        #expect(completedEvents.isEmpty)
+
+        coordinator.stop()
+        listener.cancel()
+    }
+
+    @Test @MainActor
+    func shortBreakStillAppearsAfterMinuteIdle() async {
+        let scheduler = MockScheduler()
+        scheduler.nextBreakTimeToReturn = Date().addingTimeInterval(0.05)
+        let detector = MockDetector()
+        detector.contextToReturn = DetectionContext(idleDuration: 90)
+        let locker = MockLocker()
+
+        let coordinator = BreakCoordinator(scheduler: scheduler, detector: detector, locker: locker)
+        let schedule = makeSchedule(breakDuration: 30)
+        let prefs = AppPreferences(naturalBreakThresholdMinutes: 5)
+
+        var completedEvents: [CoordinatorEvent] = []
+        let listener = Task {
+            for await event in coordinator.events {
+                if case .breakCompleted = event { completedEvents.append(event) }
+            }
+        }
+
+        coordinator.start(with: [schedule], preferences: prefs)
+        try? await Task.sleep(for: .milliseconds(300))
+
+        #expect(locker.showOverlayCalled)
+        #expect(completedEvents.isEmpty)
 
         coordinator.stop()
         listener.cancel()
@@ -840,7 +895,7 @@ struct BreakCoordinatorTests {
         let coordinator = BreakCoordinator(scheduler: scheduler, detector: detector, locker: locker)
         let schedule = makeSchedule(level: .gentle, progressiveEnforcement: true)
 
-        coordinator.start(with: [schedule], preferences: AppPreferences())
+        coordinator.start(with: [schedule], preferences: AppPreferences(gentleDailySkipLimit: 20))
         try? await Task.sleep(for: .milliseconds(300))
         #expect(locker.lastEscalationTier == 0)
 
@@ -950,11 +1005,13 @@ struct BreakCoordinatorTests {
 
         coordinator.escapeActiveBreak()
         scheduler.nextBreakTimeToReturn = Date().addingTimeInterval(0.05)
+        coordinator.resume()
         try? await Task.sleep(for: .milliseconds(300))
         #expect(locker.lastEscalationTier == 1)
 
         coordinator.escapeActiveBreak()
         scheduler.nextBreakTimeToReturn = Date().addingTimeInterval(0.05)
+        coordinator.resume()
         try? await Task.sleep(for: .milliseconds(300))
         #expect(locker.lastEscalationTier == 2)
 
@@ -1141,7 +1198,7 @@ struct BreakCoordinatorTests {
 
         let coordinator = BreakCoordinator(scheduler: scheduler, detector: detector, locker: locker)
         let schedule = makeSchedule(breakDuration: 10, dailyBreakCap: 1)
-        let prefs = AppPreferences(idleDetectionEnabled: true)
+        let prefs = AppPreferences(naturalBreakThresholdMinutes: 5)
 
         var scheduledCount = 0
         let listener = Task {
@@ -1153,8 +1210,7 @@ struct BreakCoordinatorTests {
         coordinator.start(with: [schedule], preferences: prefs)
         try? await Task.sleep(for: .milliseconds(500))
 
-        // After first idle-counted break, cap is reached -- no more breaks should be scheduled
-        // The initial schedule counts as 1, then after idle-counted break no new schedule
+        // The active break consumes the daily cap; no additional break is scheduled.
         #expect(scheduledCount >= 1)
 
         coordinator.stop()
@@ -1164,7 +1220,7 @@ struct BreakCoordinatorTests {
     // MARK: - System Sleep/Wake & Screen Lock/Unlock Tests
 
     @Test @MainActor
-    func systemSleepDismissesOverlayAndSkips() async {
+    func systemSleepSuspendsOverlayWithoutSkipping() async {
         let scheduler = MockScheduler()
         scheduler.nextBreakTimeToReturn = Date().addingTimeInterval(0.05)
         let detector = MockDetector()
@@ -1191,9 +1247,9 @@ struct BreakCoordinatorTests {
 
         #expect(locker.dismissOverlayCalled)
         #expect(!locker.isShowing)
-        #expect(skippedEvents.count == 1)
-        #expect(lastStats?.breaksSkipped == 1)
-        #expect(lastStats?.currentStreak == 0)
+        #expect(skippedEvents.isEmpty)
+        #expect(lastStats?.breaksSkipped ?? 0 == 0)
+        #expect(lastStats?.currentStreak ?? 0 == 0)
 
         coordinator.stop()
         listener.cancel()
@@ -1252,7 +1308,7 @@ struct BreakCoordinatorTests {
     }
 
     @Test @MainActor
-    func screenLockDismissesOverlayAndSkips() async {
+    func screenLockSuspendsOverlayWithoutSkipping() async {
         let scheduler = MockScheduler()
         scheduler.nextBreakTimeToReturn = Date().addingTimeInterval(0.05)
         let detector = MockDetector()
@@ -1279,9 +1335,9 @@ struct BreakCoordinatorTests {
 
         #expect(locker.dismissOverlayCalled)
         #expect(!locker.isShowing)
-        #expect(skippedEvents.count == 1)
-        #expect(lastStats?.breaksSkipped == 1)
-        #expect(lastStats?.currentStreak == 0)
+        #expect(skippedEvents.isEmpty)
+        #expect(lastStats?.breaksSkipped ?? 0 == 0)
+        #expect(lastStats?.currentStreak ?? 0 == 0)
 
         coordinator.stop()
         listener.cancel()
@@ -1340,7 +1396,7 @@ struct BreakCoordinatorTests {
     }
 
     @Test @MainActor
-    func systemSleepDuringPauseResumesOnWake() async {
+    func systemSleepPreservesManualPause() async {
         let scheduler = MockScheduler()
         scheduler.nextBreakTimeToReturn = Date().addingTimeInterval(60)
         let detector = MockDetector()
@@ -1369,15 +1425,15 @@ struct BreakCoordinatorTests {
         coordinator.handleSystemWake()
         try? await Task.sleep(for: .milliseconds(100))
 
-        #expect(resumeEvent != nil)
-        #expect(scheduledEvents.count > countBeforeWake)
+        #expect(resumeEvent == nil)
+        #expect(scheduledEvents.count == countBeforeWake)
 
         coordinator.stop()
         listener.cancel()
     }
 
     @Test @MainActor
-    func screenLockDuringPauseResumesOnUnlock() async {
+    func screenLockPreservesManualPause() async {
         let scheduler = MockScheduler()
         scheduler.nextBreakTimeToReturn = Date().addingTimeInterval(60)
         let detector = MockDetector()
@@ -1406,8 +1462,8 @@ struct BreakCoordinatorTests {
         coordinator.handleScreenUnlock()
         try? await Task.sleep(for: .milliseconds(100))
 
-        #expect(resumeEvent != nil)
-        #expect(scheduledEvents.count > countBeforeUnlock)
+        #expect(resumeEvent == nil)
+        #expect(scheduledEvents.count == countBeforeUnlock)
 
         coordinator.stop()
         listener.cancel()
@@ -1486,7 +1542,7 @@ struct BreakCoordinatorTests {
     }
 
     @Test @MainActor
-    func cycleAdvancesOnIdleCountedBreak() async {
+    func unlockedIdlePresentsAndAdvancesTheBreakOnce() async {
         let scheduler = MockScheduler()
         scheduler.nextBreakTimeToReturn = Date().addingTimeInterval(0.05)
         let detector = MockDetector()
@@ -1495,7 +1551,7 @@ struct BreakCoordinatorTests {
 
         let coordinator = BreakCoordinator(scheduler: scheduler, detector: detector, locker: locker)
         let schedule = makeSchedule(breakDuration: 300)
-        let prefs = AppPreferences(idleDetectionEnabled: true)
+        let prefs = AppPreferences(naturalBreakThresholdMinutes: 5)
 
         coordinator.start(with: [schedule], preferences: prefs)
         // The armed timer captured its target at start; pushing the mock far out keeps the
@@ -1503,8 +1559,8 @@ struct BreakCoordinatorTests {
         scheduler.nextBreakTimeToReturn = Date().addingTimeInterval(600)
         try? await Task.sleep(for: .milliseconds(300))
 
-        #expect(!locker.showOverlayCalled)
-        #expect(lastCycleIndex(scheduler, for: schedule) == 1)
+        #expect(locker.showOverlayCalled)
+        #expect(coordinator.captureEnforcementState().cycleIndices[schedule.id] == 1)
         coordinator.stop()
     }
 
@@ -1600,7 +1656,7 @@ struct BreakCoordinatorTests {
         coordinator.handleSystemWake()
         try? await Task.sleep(for: .milliseconds(100))
 
-        #expect(lastCycleIndex(scheduler, for: schedule) == 1)
+        #expect(coordinator.captureEnforcementState().cycleIndices[schedule.id] == 1)
         coordinator.stop()
     }
 
@@ -1624,7 +1680,7 @@ struct BreakCoordinatorTests {
 
         // The pending id was consumed when the overlay triggered, so the menu skip
         // must not advance a second time.
-        #expect(lastCycleIndex(scheduler, for: schedule) == 1)
+        #expect(coordinator.captureEnforcementState().cycleIndices[schedule.id] == 1)
         coordinator.stop()
     }
 
@@ -2055,7 +2111,8 @@ struct BreakCoordinatorEnforcementStateTests {
         )
         reEnabled.start(with: [toggled, other], preferences: AppPreferences(), restoring: whileOff)
 
-        #expect(reEnabled.captureEnforcementState().pendingBreakDates == [toggled.id: slot])
+        #expect(reEnabled.captureEnforcementState().pendingBreakDates[toggled.id] == slot)
+        #expect(reEnabled.captureEnforcementState().pendingBreakDates[other.id] != nil)
         reEnabled.stop()
     }
 
@@ -2491,12 +2548,13 @@ struct BreakCoordinatorPostponeTests {
     }
 
     @Test
-    func postponedBreakIsNotSavedAcrossRelaunch() throws {
-        let state = EnforcementState(postponedScheduleID: UUID())
+    func postponedBreakIsSavedAcrossRelaunch() throws {
+        let id = UUID()
+        let state = EnforcementState(postponedScheduleID: id)
         let decoded = try JSONDecoder().decode(
             EnforcementState.self, from: JSONEncoder().encode(state)
         )
-        #expect(decoded.postponedScheduleID == nil)
+        #expect(decoded.postponedScheduleID == id)
     }
 }
 
@@ -2587,7 +2645,7 @@ struct BreakCoordinatorCueTests {
         run.finish()
     }
 
-    @Test func noEndCueForSkipEscapeOrIdleCredit() async {
+    @Test func noEndCueForSkipEscapeOrUnlockedIdle() async {
         let skipped = start(preferences: AppPreferences(soundAfterBreak: true))
         await waitForBreak(skipped)
         skipped.coordinator.skipActiveBreak()
@@ -2603,14 +2661,14 @@ struct BreakCoordinatorCueTests {
         #expect(!escaped.log.entries.contains("ended"))
 
         let idle = start(
-            preferences: AppPreferences(idleDetectionEnabled: true, soundAfterBreak: true),
+            preferences: AppPreferences(naturalBreakThresholdMinutes: 5, soundAfterBreak: true),
             detector: clearContext(idle: 3600)
         )
-        #expect(await waitUntil { idle.log.entries.contains("completed") })
+        #expect(await waitUntil { idle.locker.showOverlayCalled })
         idle.scheduler.nextBreakTimeToReturn = Date().addingTimeInterval(600)
         idle.finish()
         #expect(!idle.log.entries.contains("ended"))
-        #expect(!idle.locker.showOverlayCalled)
+        #expect(!idle.log.entries.contains("completed"))
     }
 
     @Test func noCuesWhenPreferencesOff() async {

@@ -10,7 +10,7 @@ struct OnboardingMenuBarStep: View {
             menuBarStrip
 
             OnboardingHeading(
-                "StandLock lives in the menu bar",
+                "standlock - block timer lives in the menu bar",
                 "Click the circle for the next break, Skip and Pause. It fills up as the next break gets closer."
             )
 
@@ -31,7 +31,7 @@ struct OnboardingMenuBarStep: View {
                 }
                 SettingsRowDivider()
                 // A row title, not a description, for the same reason: it is the only way back.
-                SettingsRow("Can't see the icon? Open StandLock again from Applications and Settings opens.", symbol: "questionmark.circle") {
+                SettingsRow("Can't see the icon? Open standlock - block timer again from Applications and Settings opens.", symbol: "questionmark.circle") {
                     EmptyView()
                 }
             }

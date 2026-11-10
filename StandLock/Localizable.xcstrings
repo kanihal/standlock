@@ -118,689 +118,687 @@
     ", Editing Locked" : {
       "extractionState" : "manual"
     },
-    "Long break time": {
-      "extractionState": "manual",
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Uzun mola süresi"
+    "Long break time" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uzun mola süresi"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "长休息时间"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "长休息时间"
           }
         }
       }
     },
-    "Short break time": {
-      "extractionState": "manual",
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kısa mola süresi"
+    "Short break time" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kısa mola süresi"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "短休息时间"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "短休息时间"
           }
         }
       }
     },
-    "Clock": {
-      "extractionState": "manual",
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Saat"
+    "Clock" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saat"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "时钟"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "时钟"
           }
         }
       }
     },
-    "00:00–%@ and %@–24:00": {
-      "extractionState": "manual",
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "00:00–%@ ve %@–24:00"
+    "00:00–%@ and %@–24:00" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "00:00–%@ ve %@–24:00"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "00:00–%@ 和 %@–24:00"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "00:00–%@ 和 %@–24:00"
           }
         }
       }
     },
-    "Add longer breaks": {
-      "extractionState": "manual",
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Uzun molalar ekle"
+    "Add longer breaks" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uzun molalar ekle"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "添加长休息"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "添加长休息"
           }
         }
       }
     },
-    "After every": {
-      "extractionState": "manual",
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Her"
+    "After every" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Her"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "每工作"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每工作"
           }
         }
       }
     },
-    "min of work,": {
-      "extractionState": "manual",
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "dakikalık çalışmadan sonra,"
+    "min of work," : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "dakikalık çalışmadan sonra,"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "分钟，"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分钟，"
           }
         }
       }
     },
-    "After each work interval,": {
-      "extractionState": "manual",
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Her çalışma aralığından sonra,"
+    "After each work interval," : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Her çalışma aralığından sonra,"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "每个工作时段结束后，"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每个工作时段结束后，"
           }
         }
       }
     },
-    "break for": {
-      "extractionState": "manual",
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "mola süresi"
+    "break for" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "mola süresi"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "休息"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "休息"
           }
         }
       }
     },
-    "min.": {
-      "extractionState": "manual",
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "dk."
+    "min." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "dk."
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "分钟。"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分钟。"
           }
         }
       }
     },
-    "After": {
-      "extractionState": "manual",
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Her"
+    "After" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Her"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "每"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每"
           }
         }
       }
     },
-    "short breaks,": {
-      "extractionState": "manual",
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "kısa moladan sonra,"
+    "short breaks," : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "kısa moladan sonra,"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "次短休息后，"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "次短休息后，"
           }
         }
       }
     },
-    "longer break for": {
-      "extractionState": "manual",
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "uzun mola süresi"
+    "longer break for" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "uzun mola süresi"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "长休息"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "长休息"
           }
         }
       }
     },
-    "Longer break must be longer than the short break.": {
-      "extractionState": "manual",
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Uzun mola, kısa moladan daha uzun olmalıdır."
+    "Longer break must be longer than the short break." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uzun mola, kısa moladan daha uzun olmalıdır."
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "长休息必须比短休息更长。"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "长休息必须比短休息更长。"
           }
         }
       }
     },
-    "Work duration": {
-      "extractionState": "manual",
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Çalışma süresi"
+    "Work duration" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çalışma süresi"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "工作时长"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "工作时长"
           }
         }
       }
     },
-    "Short break duration": {
-      "extractionState": "manual",
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kısa mola süresi"
+    "Short break duration" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kısa mola süresi"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "短休息时长"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "短休息时长"
           }
         }
       }
     },
-    "Short breaks before a longer break": {
-      "extractionState": "manual",
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Uzun moladan önceki kısa mola sayısı"
+    "Short breaks before a longer break" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uzun moladan önceki kısa mola sayısı"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "长休息前的短休息次数"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "长休息前的短休息次数"
           }
         }
       }
     },
-    "Longer break duration": {
-      "extractionState": "manual",
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Uzun mola süresi"
+    "Longer break duration" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uzun mola süresi"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "长休息时长"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "长休息时长"
           }
         }
       }
     },
-    "Work intervals repeat in this order.": {
-      "extractionState": "manual",
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Çalışma aralıkları bu sırayla tekrar eder."
+    "Work intervals repeat in this order." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çalışma aralıkları bu sırayla tekrar eder."
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "工作时段按此顺序循环。"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "工作时段按此顺序循环。"
           }
         }
       }
     },
-    "Vary work intervals": {
-      "extractionState": "manual",
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Çalışma aralıklarını değiştir"
+    "Vary work intervals" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çalışma aralıklarını değiştir"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "交替工作时长"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "交替工作时长"
           }
         }
       }
     },
-    "Add interval": {
-      "extractionState": "manual",
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Aralık ekle"
+    "Add interval" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aralık ekle"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "添加时段"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "添加时段"
           }
         }
       }
     },
-    "Name (optional)": {
-      "extractionState": "manual",
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ad (isteğe bağlı)"
+    "Name (optional)" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ad (isteğe bağlı)"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "名称（可选）"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "名称（可选）"
           }
         }
       }
     },
-    "Interval name": {
-      "extractionState": "manual",
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Aralık adı"
+    "Interval name" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aralık adı"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "时段名称"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "时段名称"
           }
         }
       }
     },
-    "Start hour": {
-      "extractionState": "manual",
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Başlangıç saati"
+    "Start hour" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Başlangıç saati"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "开始小时"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "开始小时"
           }
         }
       }
     },
-    "Start minute": {
-      "extractionState": "manual",
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Başlangıç dakikası"
+    "Start minute" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Başlangıç dakikası"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "开始分钟"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "开始分钟"
           }
         }
       }
     },
-    "End hour": {
-      "extractionState": "manual",
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bitiş saati"
+    "End hour" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bitiş saati"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "结束小时"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "结束小时"
           }
         }
       }
     },
-    "End minute": {
-      "extractionState": "manual",
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bitiş dakikası"
+    "End minute" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bitiş dakikası"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "结束分钟"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "结束分钟"
           }
         }
       }
     },
-    "24-hour work and break schedule": {
-      "extractionState": "manual",
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "24 saatlik çalışma ve mola programı"
+    "24-hour work and break schedule" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "24 saatlik çalışma ve mola programı"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "24 小时工作与休息计划"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "24 小时工作与休息计划"
           }
         }
       }
     },
-    "24-hour day": {
-      "extractionState": "manual",
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "24 saatlik gün"
+    "24-hour day" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "24 saatlik gün"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "24 小时"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "24 小时"
           }
         }
       }
     },
-    "%lld time windows": {
-      "extractionState": "manual",
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld zaman aralığı"
+    "%lld time windows" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld zaman aralığı"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld 个时间段"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld 个时间段"
           }
         }
       }
     },
-    "Work": {
-      "extractionState": "manual",
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Çalışma"
+    "Work" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çalışma"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "工作"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "工作"
           }
         }
       }
     },
-    "Long breaks": {
-      "extractionState": "manual",
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Uzun molalar"
+    "Long breaks" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uzun molalar"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "长休息"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "长休息"
           }
         }
       }
     },
-    "%lld h": {
-      "extractionState": "manual",
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld sa."
+    "%lld h" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld sa."
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld 小时"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld 小时"
           }
         }
       }
     },
-    "%lld h %lld min": {
-      "extractionState": "manual",
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld sa. %lld dk."
+    "%lld h %lld min" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld sa. %lld dk."
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld 小时 %lld 分钟"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld 小时 %lld 分钟"
           }
         }
       }
     },
-    "Work: %@. Breaks: %@.": {
-      "extractionState": "manual",
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Çalışma: %@. Molalar: %@."
+    "Work: %@. Breaks: %@." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çalışma: %@. Molalar: %@."
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "工作：%@。休息：%@。"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "工作：%@。休息：%@。"
           }
         }
       }
     },
-    "%@ to %@, %@": {
-      "extractionState": "manual",
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@–%@, %@"
+    "%@ to %@, %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@–%@, %@"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ 至 %@，%@"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 至 %@，%@"
           }
         }
       }
     },
-    "%@ break": {
-      "extractionState": "manual",
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ mola"
+    "%@ break" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ mola"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@休息"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@休息"
           }
         }
       }
     },
-    "Break at %@, %@": {
-      "extractionState": "manual",
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ saatinde mola, %@"
+    "Break at %@, %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ saatinde mola, %@"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ 休息，时长 %@"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 休息，时长 %@"
           }
         }
       }
     },
-    "Make the longer break longer than the short break to preview your day.": {
-      "extractionState": "manual",
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gününüzü önizlemek için uzun molayı kısa moladan daha uzun yapın."
+    "Make the longer break longer than the short break to preview your day." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gününüzü önizlemek için uzun molayı kısa moladan daha uzun yapın."
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "请将长休息设为比短休息更长，以预览一天的安排。"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请将长休息设为比短休息更长，以预览一天的安排。"
           }
         }
       }
     },
-    "Make the longer break longer than the short break to save this schedule, or discard your changes.": {
-      "extractionState": "manual",
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bu programı kaydetmek için uzun molayı kısa moladan daha uzun yapın veya değişikliklerinizi atın."
+    "Make the longer break longer than the short break to save this schedule, or discard your changes." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu programı kaydetmek için uzun molayı kısa moladan daha uzun yapın veya değişikliklerinizi atın."
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "请将长休息设为比短休息更长，以保存此计划，或放弃更改。"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请将长休息设为比短休息更长，以保存此计划，或放弃更改。"
           }
         }
       }
     },
-    "" : {
-
-    },
+    "" : {},
     "   ·   " : {
       "localizations" : {
         "tr" : {
@@ -1633,18 +1631,18 @@
         }
       }
     },
-    "Quit StandLock?" : {
+    "Quit standlock - block timer?" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "StandLock'tan çıkılsın mı?"
+            "value" : "standlock - block timer'tan çıkılsın mı?"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "退出 StandLock？"
+            "value" : "退出 standlock - block timer？"
           }
         }
       }
@@ -1873,50 +1871,50 @@
         }
       }
     },
-    "StandLock is up to date" : {
+    "standlock - block timer is up to date" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "StandLock güncel"
+            "value" : "standlock - block timer güncel"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "StandLock 已是最新版本"
+            "value" : "standlock - block timer 已是最新版本"
           }
         }
       }
     },
-    "StandLock Settings" : {
+    "standlock - block timer Settings" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "StandLock Ayarları"
+            "value" : "standlock - block timer Ayarları"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "StandLock 设置"
+            "value" : "standlock - block timer 设置"
           }
         }
       }
     },
-    "StandLock works without any of them." : {
+    "standlock - block timer works without any of them." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "StandLock hiçbiri olmadan da çalışır."
+            "value" : "standlock - block timer hiçbiri olmadan da çalışır."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "即使一项都不授予，StandLock 也能运行。"
+            "value" : "即使一项都不授予，standlock - block timer 也能运行。"
           }
         }
       }
@@ -1937,34 +1935,34 @@
         }
       }
     },
-    "This file could not be read. It may be damaged or made by a newer version of StandLock." : {
+    "This file could not be read. It may be damaged or made by a newer version of standlock - block timer." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bu dosya okunamadı. Bozuk olabilir ya da StandLock'un daha yeni bir sürümüyle yapılmış olabilir."
+            "value" : "Bu dosya okunamadı. Bozuk olabilir ya da standlock - block timer'un daha yeni bir sürümüyle yapılmış olabilir."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "无法读取此文件。它可能已损坏，或由更新版本的 StandLock 创建。"
+            "value" : "无法读取此文件。它可能已损坏，或由更新版本的 standlock - block timer 创建。"
           }
         }
       }
     },
-    "This file is not a StandLock settings file." : {
+    "This file is not a standlock - block timer settings file." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bu dosya bir StandLock ayar dosyası değil."
+            "value" : "Bu dosya bir standlock - block timer ayar dosyası değil."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "此文件不是 StandLock 设置文件。"
+            "value" : "此文件不是 standlock - block timer 设置文件。"
           }
         }
       }
@@ -1985,18 +1983,18 @@
         }
       }
     },
-    "This file was made by a newer version of StandLock. Update StandLock to import it." : {
+    "This file was made by a newer version of standlock - block timer. Update standlock - block timer to import it." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bu dosya StandLock'un daha yeni bir sürümüyle yapıldı. İçe aktarmak için StandLock'u güncelle."
+            "value" : "Bu dosya standlock - block timer'un daha yeni bir sürümüyle yapıldı. İçe aktarmak için standlock - block timer'u güncelle."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "此文件由更新版本的 StandLock 创建。请更新 StandLock 后再导入。"
+            "value" : "此文件由更新版本的 standlock - block timer 创建。请更新 standlock - block timer 后再导入。"
           }
         }
       }
@@ -2097,18 +2095,18 @@
         }
       }
     },
-    "You won't get break reminders until you open StandLock again." : {
+    "You won't get break reminders until you open standlock - block timer again." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "StandLock'u yeniden açana kadar mola hatırlatması almayacaksın."
+            "value" : "standlock - block timer'u yeniden açana kadar mola hatırlatması almayacaksın."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "重新打开 StandLock 之前，你不会收到休息提醒。"
+            "value" : "重新打开 standlock - block timer 之前，你不会收到休息提醒。"
           }
         }
       }
@@ -2516,18 +2514,18 @@
         }
       }
     },
-    "About StandLock" : {
+    "About standlock - block timer" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "StandLock Hakkında"
+            "value" : "standlock - block timer Hakkında"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "关于 StandLock"
+            "value" : "关于 standlock - block timer"
           }
         }
       }
@@ -3394,18 +3392,18 @@
         }
       }
     },
-    "Could not relaunch StandLock. Please reopen the app manually." : {
+    "Could not relaunch standlock - block timer. Please reopen the app manually." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "StandLock yeniden başlatılamadı. Lütfen uygulamayı elle yeniden açın."
+            "value" : "standlock - block timer yeniden başlatılamadı. Lütfen uygulamayı elle yeniden açın."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "无法重新启动 StandLock。请手动重新打开应用。"
+            "value" : "无法重新启动 standlock - block timer。请手动重新打开应用。"
           }
         }
       }
@@ -4325,7 +4323,7 @@
       }
     },
     "GitHub" : {
-      "comment" : "Label text for a link to the StandLock GitHub repository.",
+      "comment" : "Label text for a link to the standlock - block timer GitHub repository.",
       "isCommentAutoGenerated" : true
     },
     "Go touch some grass" : {
@@ -5601,18 +5599,18 @@
         }
       }
     },
-    "Open StandLock when you log in" : {
+    "Open standlock - block timer when you log in" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Oturum açtığınızda StandLock'u başlat"
+            "value" : "Oturum açtığınızda standlock - block timer'u başlat"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "登录时打开 StandLock"
+            "value" : "登录时打开 standlock - block timer"
           }
         }
       }
@@ -5901,18 +5899,18 @@
         }
       }
     },
-    "Quit StandLock" : {
+    "Quit standlock - block timer" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "StandLock'tan Çık"
+            "value" : "standlock - block timer'tan Çık"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "退出 StandLock"
+            "value" : "退出 standlock - block timer"
           }
         }
       }
@@ -6797,34 +6795,34 @@
         }
       }
     },
-    "StandLock" : {
+    "standlock - block timer" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "StandLock"
+            "value" : "standlock - block timer"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "StandLock"
+            "value" : "standlock - block timer"
           }
         }
       }
     },
-    "StandLock needs to restart to apply this permission." : {
+    "standlock - block timer needs to restart to apply this permission." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bu izni uygulamak için StandLock'un yeniden başlatılması gerekiyor."
+            "value" : "Bu izni uygulamak için standlock - block timer'un yeniden başlatılması gerekiyor."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "StandLock 需要重新启动才能应用此权限。"
+            "value" : "standlock - block timer 需要重新启动才能应用此权限。"
           }
         }
       }
@@ -8063,18 +8061,18 @@
         }
       }
     },
-    "Lets StandLock notice when you hold Control, Option and Command to end a Strict break early." : {
+    "Lets standlock - block timer notice when you hold Control, Option and Command to end a Strict break early." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Katı molayı erken bitirmek için Control, Option ve Command tuşlarını basılı tuttuğunuzu StandLock'un anlamasını sağlar."
+            "value" : "Katı molayı erken bitirmek için Control, Option ve Command tuşlarını basılı tuttuğunuzu standlock - block timer'un anlamasını sağlar."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "让 StandLock 能发现你按住 Control、Option 和 Command 以提前结束强制休息。"
+            "value" : "让 standlock - block timer 能发现你按住 Control、Option 和 Command 以提前结束强制休息。"
           }
         }
       }
@@ -8095,18 +8093,18 @@
         }
       }
     },
-    "Lets StandLock keep breaks out of your meetings." : {
+    "Lets standlock - block timer keep breaks out of your meetings." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "StandLock'un molaları toplantılarınızın dışında tutmasını sağlar."
+            "value" : "standlock - block timer'un molaları toplantılarınızın dışında tutmasını sağlar."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "让 StandLock 避开你的会议安排休息。"
+            "value" : "让 standlock - block timer 避开你的会议安排休息。"
           }
         }
       }
@@ -8915,18 +8913,18 @@
         }
       }
     },
-    "When a break is due, StandLock covers your screen with a countdown and an exercise. You decide how hard it is to get out." : {
+    "When a break is due, standlock - block timer covers your screen with a countdown and an exercise. You decide how hard it is to get out." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mola vakti gelince StandLock ekranını bir geri sayım ve bir egzersizle kaplar. Ne kadar zor çıkılacağına sen karar verirsin."
+            "value" : "Mola vakti gelince standlock - block timer ekranını bir geri sayım ve bir egzersizle kaplar. Ne kadar zor çıkılacağına sen karar verirsin."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "休息时间一到，StandLock 会用倒计时和一个练习覆盖你的屏幕。退出有多难，由你决定。"
+            "value" : "休息时间一到，standlock - block timer 会用倒计时和一个练习覆盖你的屏幕。退出有多难，由你决定。"
           }
         }
       }
@@ -9235,18 +9233,18 @@
         }
       }
     },
-    "StandLock lives in the menu bar" : {
+    "standlock - block timer lives in the menu bar" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "StandLock menü çubuğunda"
+            "value" : "standlock - block timer menü çubuğunda"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "StandLock 在菜单栏中"
+            "value" : "standlock - block timer 在菜单栏中"
           }
         }
       }
@@ -9283,18 +9281,18 @@
         }
       }
     },
-    "Can't see the icon? Open StandLock again from Applications and Settings opens." : {
+    "Can't see the icon? Open standlock - block timer again from Applications and Settings opens." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "İkonu göremiyor musun? StandLock'u Uygulamalar'dan tekrar aç, Ayarlar açılır."
+            "value" : "İkonu göremiyor musun? standlock - block timer'u Uygulamalar'dan tekrar aç, Ayarlar açılır."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "看不到图标？从“应用程序”中再次打开 StandLock，就会打开设置。"
+            "value" : "看不到图标？从“应用程序”中再次打开 standlock - block timer，就会打开设置。"
           }
         }
       }
@@ -9346,6 +9344,226 @@
           }
         }
       }
+    },
+    "Input blocked; no skipping or pausing. Emergency escape only." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giriş engellenir; atlama veya duraklatma yoktur. Yalnızca acil çıkış."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "屏蔽输入；不可跳过或暂停。仅允许紧急退出。"
+          }
+        }
+      }
+    },
+    "Strict disables skipping, postponing, and manual pauses. Emergency escape remains available unless the consecutive skip limit is reached." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Katı mod atlamayı, ertelemeyi ve elle duraklatmayı devre dışı bırakır. Art arda atlama sınırına ulaşılmadıkça acil çıkış kullanılabilir."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "严格模式禁用跳过、推迟和手动暂停。除非已达到连续跳过上限，否则仍可紧急退出。"
+          }
+        }
+      }
+    },
+    "Rest & Recall" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dinlen ve Hatırla"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "休息与回想"
+          }
+        }
+      }
+    },
+    "Break time remaining" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kalan mola süresi"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "休息剩余时间"
+          }
+        }
+      }
+    },
+    "Zero disables skipping, emergency escape, postponing, and manual pauses." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sıfır; atlamayı, acil çıkışı, ertelemeyi ve elle duraklatmayı devre dışı bırakır."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "设为 0 将禁用跳过、紧急退出、推迟和手动暂停。"
+          }
+        }
+      }
+    },
+    "Set to 0 to disable skipping and manual pauses. Higher limits reset after a completed break or enough time away." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atlamayı ve elle duraklatmayı kapatmak için 0 seçin. Daha yüksek sınırlar, tamamlanan bir mola veya yeterince uzun bir uzaklaşmadan sonra sıfırlanır."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "设为 0 可禁用跳过和手动暂停。大于 0 的限额会在完成休息或离开足够时间后重置。"
+          }
+        }
+      }
+    },
+    "Every break shows only Rest & Recall and a small countdown in the bottom-right corner." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Her molada yalnızca Dinlen ve Hatırla yazısı ile sağ alt köşede küçük bir geri sayım gösterilir."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每次休息仅显示“休息与回想”，以及右下角的小型倒计时。"
+          }
+        }
+      }
+    },
+    "Quiet full-screen rest with emergency escape" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Acil çıkışlı, sakin tam ekran mola"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "安静的全屏休息，支持紧急退出"
+          }
+        }
+      }
+    },
+    "Quiet full-screen rest with a longer emergency hold" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Acil çıkış için daha uzun basılı tutma gerektiren sakin tam ekran mola"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "安静的全屏休息，紧急退出需按住更久"
+          }
+        }
+      }
+    },
+    "Zero skips" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atlama yok"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "不允许跳过"
+          }
+        }
+      }
+    },
+    "Hard block" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tam engelleme"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "强制休息"
+          }
+        }
+      }
+    },
+    "After this many completed short breaks since your last long break." : {
+      "extractionState" : "manual"
+    },
+    "Skip up to %lld breaks in a row. After that, skipping and Control + Option + Command are disabled until you complete a break." : {
+      "extractionState" : "manual"
+    },
+    "Skip Next Break and emergency exits count toward this limit. Completing a break resets it; enough time locked or asleep does too." : {
+      "extractionState" : "manual"
+    },
+    "Time locked or asleep can count as a break." : {
+      "extractionState" : "manual"
+    },
+    "Complete this break to skip again." : {
+      "extractionState" : "manual"
+    },
+    "Time away" : {
+      "extractionState" : "manual"
+    },
+    "Time away counts as a break after" : {
+      "extractionState" : "manual"
+    },
+    "Only screen lock and system sleep count. Videos, reading, and calls remain active time." : {
+      "extractionState" : "manual"
+    },
+    "Limit consecutive skips" : {
+      "extractionState" : "manual"
+    },
+    "Maximum consecutive skips" : {
+      "extractionState" : "manual"
+    },
+    "Emergency escape remains available unless a schedule’s consecutive skip limit is reached." : {
+      "extractionState" : "manual"
     }
   },
   "version" : "1.1"

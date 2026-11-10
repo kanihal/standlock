@@ -14,6 +14,12 @@ public struct EnforcementTier: Sendable, Equatable {
     public let skipDelay: TimeInterval
     public let dismissMechanism: DismissMechanism
 
+    /// Quiet overlays express escalation as a hold instead of an onscreen challenge.
+    public var quietEscapeHoldDuration: TimeInterval {
+        if case .keyCombo(let duration) = dismissMechanism { return duration }
+        return 30 + max(0, skipDelay)
+    }
+
     public init(skipDelay: TimeInterval, dismissMechanism: DismissMechanism) {
         self.skipDelay = skipDelay
         self.dismissMechanism = dismissMechanism

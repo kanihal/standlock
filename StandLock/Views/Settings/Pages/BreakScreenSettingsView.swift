@@ -16,9 +16,7 @@ struct BreakScreenSettingsView: View {
         SettingsPageLayout("Break Screen") {
             SettingsSection("Preview") {
                 BreakScreenPreviewCard(
-                    look: BreakScreenLook.resolve(theme: themeStore.current, level: .gentle, breakScreen: breakScreen),
-                    message: breakScreen.displayMessage,
-                    statistics: breakScreen.showsStatistics ? coordinator.todayStats : nil
+                    look: BreakScreenLook.resolve(theme: themeStore.current, level: .gentle, breakScreen: breakScreen)
                 )
                 .padding(SettingsTokens.previewInsets)
             }
@@ -48,21 +46,10 @@ struct BreakScreenSettingsView: View {
             }
 
             SettingsSection("Content") {
-                SettingsRow("Break Message", symbol: "text.quote", description: "Shown under the timer during every break") {
-                    TextField("Break Message", text: $coordinator.preferences.breakScreen.message, prompt: Text("e.g. Drink some water"))
-                        .labelsHidden()
-                        .textFieldStyle(.roundedBorder)
-                        .frame(width: SettingsTokens.textFieldWidth)
-                }
-
-                SettingsRowDivider()
-
-                SettingsToggleRow(
-                    "Show Statistics",
-                    symbol: "chart.bar",
-                    description: "Show today's break counts at the bottom",
-                    isOn: $coordinator.preferences.breakScreen.showsStatistics
-                )
+                Text("Every break shows only Rest & Recall and a small countdown in the bottom-right corner.")
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
+                    .padding(SettingsTokens.rowInsets)
             }
 
             SettingsSection("During a break") {

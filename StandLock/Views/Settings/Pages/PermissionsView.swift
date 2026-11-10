@@ -19,7 +19,7 @@ struct PermissionsView: View {
                     calendarCard
                 }
             } else {
-                SettingsGroup("Optional", note: "StandLock works without any of them.") {
+                SettingsGroup("Optional", note: "standlock - block timer works without any of them.") {
                     accessibilityCard
                     inputMonitoringCard
                     calendarCard
@@ -54,7 +54,7 @@ struct PermissionsView: View {
         PermissionCard(
             title: "Input Monitoring",
             symbol: "keyboard",
-            reason: "Lets StandLock notice when you hold Control, Option and Command to end a Strict break early.",
+            reason: "Lets standlock - block timer notice when you hold Control, Option and Command to end a Strict break early.",
             withoutIt: "Without it: Strict runs as Firm.",
             privacy: "What you type is never read or saved.",
             permission: .inputMonitoring,
@@ -67,7 +67,7 @@ struct PermissionsView: View {
         PermissionCard(
             title: "Calendar Access",
             symbol: "calendar",
-            reason: "Lets StandLock keep breaks out of your meetings.",
+            reason: "Lets standlock - block timer keep breaks out of your meetings.",
             withoutIt: "Without it: breaks ignore your calendar.",
             privacy: "Reads event times only, never titles.",
             permission: .calendar,

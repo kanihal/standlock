@@ -31,6 +31,10 @@ final class AppCoordinator: ObservableObject {
     @Published var todayStats: BreakStatistics = BreakStatistics()
     @Published var deferralReason: DeferralReason?
     @Published var isPaused: Bool = false
+    @Published private(set) var canSkipNextBreak = false
+    @Published private(set) var canPauseScheduling = true
+    @Published private(set) var pendingSkipSlotID: UUID?
+    @Published private(set) var isSystemSuspended = false
     @Published var pausedUntil: Date?
     @Published private(set) var schedules: [Schedule] = []
     @Published var preferences: AppPreferences = AppPreferences()
@@ -46,6 +50,12 @@ final class AppCoordinator: ObservableObject {
     private lazy var mathChallengeWindow = MathChallengeWindowController(store: scheduleEditLocks, languageStore: languageStore)
     let permissionChecker: PermissionChecker
     private let breakSoundPlayer = BreakSoundPlayer()
+    private let systemAwayMonitor = SystemAwayMonitor()
+    private let checkpointPersistence = AppCheckpointPersistence()
+    private let shutdownHistory = ShutdownHistoryReader()
+    private var verifiedStartupRest: TimeInterval = 0
+    private var terminationReason: SystemTerminationReason?
+    var hasUnfinishedBreak: Bool { coordinator?.hasUnfinishedBreak == true }
 
     private var coordinator: BreakCoordinator?
     /// Survives the coordinator-less interval between a teardown and the next build.
@@ -88,11 +98,19 @@ final class AppCoordinator: ObservableObject {
         scheduleLockCancellable = scheduleEditLocks.objectWillChange.sink { [weak self] _ in
             self?.objectWillChange.send()
         }
+        AppTerminationController.shared.coordinator = self
+        settingsNavigation.onQuitConfirmed = { AppTerminationController.shared.confirmQuit() }
+        settingsNavigation.onQuitCancelled = { AppTerminationController.shared.cancelQuit() }
         applyCalendarPreferences()
         refreshAvailableCalendars()
         syncPreferencesWithPermissions()
         startProgressTimer()
         observeSystemSleep()
+        NSWorkspace.shared.notificationCenter.addObserver(
+            forName: NSWorkspace.willPowerOffNotification, object: nil, queue: .main
+        ) { [weak self] _ in
+            MainActor.assumeIsolated { self?.saveEnforcementState() }
+        }
         // Quitting must not hand back a fresh interval, cap and tier on relaunch.
         NotificationCenter.default.addObserver(
             forName: NSApplication.willTerminateNotification, object: nil, queue: .main
@@ -174,16 +192,21 @@ final class AppCoordinator: ObservableObject {
         if let data = UserDefaults.standard.data(forKey: "statistics"),
            let decoded = try? JSONDecoder().decode(BreakStatistics.self, from: data) {
             todayStats = decoded
-            todayStats.resetWeeklyIfNeeded(currentDate: Date())
-            if todayStats.resetDailyIfNeeded(currentDate: Date()) {
-                saveStatistics()
-            }
         }
 
         if let data = UserDefaults.standard.data(forKey: "breakHistory"),
            let decoded = try? JSONDecoder().decode(BreakHistory.self, from: data) {
             breakHistory = decoded
         }
+        if let checkpoint = checkpointPersistence.load() {
+            carriedEnforcementState = checkpoint.enforcement
+            carriedEnforcementDay = checkpoint.savedAt
+            todayStats = checkpoint.statistics
+            if let record = checkpoint.dailyRecord { breakHistory.upsert(record) }
+            if let exit = checkpoint.exit { verifiedStartupRest = shutdownHistory.verifiedRest(after: exit) ?? 0 }
+        }
+        todayStats.resetWeeklyIfNeeded(currentDate: Date())
+        if todayStats.resetDailyIfNeeded(currentDate: Date()) { saveStatistics() }
         syncScheduledWeekdays()
         let cutoff = DailyBreakRecord.dateKey(
             from: Calendar.current.date(byAdding: .day, value: -400, to: Date())!
@@ -286,13 +309,11 @@ final class AppCoordinator: ObservableObject {
     private var lastStrictModeAvailable: Bool?
 
     /// Enabled schedules with Strict reduced to Firm while the permissions it needs are missing.
-    /// Firm, not Gentle: Strict is chosen for maximum friction, and Gentle's first tier is a
-    /// plain skip button, so a permission blip would hand the user a break they can dismiss
-    /// instantly. Firm keeps real friction (delay plus phrase) and needs no permission at all --
-    /// only Strict installs the event tap, in `OverlayWindowController.showOverlay`.
+    /// Firm preserves a longer emergency hold without installing an event tap. The chosen
+    /// Strict policy is passed separately so this display fallback cannot enable Skip or Pause.
     private func enforceableSchedules() -> [Schedule] {
         let strictAvailable = permissionChecker.strictModeAvailable
-        return schedules.filter(\.isEnabled).map { schedule in
+        return schedules.map { schedule in
             guard !strictAvailable, schedule.disciplineLevel == .strict else { return schedule }
             var downgraded = schedule
             downgraded.disciplineLevel = .firm
@@ -311,14 +332,20 @@ final class AppCoordinator: ObservableObject {
     }
 
     private func updateDailyHistory(_ stats: BreakStatistics) {
-        let key = DailyBreakRecord.dateKey(from: Date())
+        guard let record = dailyHistoryRecord(stats) else { return }
+        breakHistory.upsert(record)
+        saveHistory()
+    }
+
+    private func dailyHistoryRecord(_ stats: BreakStatistics) -> DailyBreakRecord? {
+        let key = DailyBreakRecord.dateKey(from: stats.date)
         let hasActiveSchedule = !schedules.filter(\.isEnabled).isEmpty
         // Zeroed counters never describe a day worth recording: they mean either a fresh day
         // just rolled over or a deferral-only update, and a stored record with zero completed
         // breaks ends the streak in BreakHistory.currentStreak while a missing one reads as a
         // day still in progress. Writing them would also let a backwards day change (date-line
         // travel, an NTP correction) blank out a day that already has real numbers.
-        guard stats.totalBreaks > 0 else { return }
+        guard stats.totalBreaks > 0 else { return nil }
         var record = breakHistory.record(for: key)
             ?? DailyBreakRecord(dateKey: key, hadActiveSchedule: hasActiveSchedule)
         record.breaksCompleted = stats.breaksCompleted
@@ -332,13 +359,13 @@ final class AppCoordinator: ObservableObject {
             : enabledSchedules.map(\.breakDuration).reduce(0, +) / Double(enabledSchedules.count)
         record.totalBreakDuration = Double(stats.breaksCompleted) * avgDuration
 
-        breakHistory.upsert(record)
-        saveHistory()
+        return record
     }
 
     // MARK: - Coordinator Lifecycle
 
-    private func startCoordinator(restoring state: EnforcementState = EnforcementState()) {
+    private func startCoordinator(restoring state: EnforcementState = EnforcementState(),
+                                  statistics restoredStatistics: BreakStatistics? = nil) {
         stopCoordinator()
         let scheduler = ScheduleEvaluator()
         applyCalendarPreferences()
@@ -348,27 +375,34 @@ final class AppCoordinator: ObservableObject {
         )
         self.coordinator = breakCoordinator
         breakCoordinator.exercises = loadedExercises
+        breakCoordinator.onCheckpoint = { [weak self] state, stats in
+            self?.persistCoordinatorState(state, statistics: stats) ?? false
+        }
 
-        overlayController.onSkip = { [weak breakCoordinator] in
-            breakCoordinator?.skipActiveBreak()
+        overlayController.onSkip = { [weak breakCoordinator] id in
+            breakCoordinator?.skipActiveBreak(expectedBreakID: id)
         }
-        overlayController.onComplete = { [weak breakCoordinator] in
-            breakCoordinator?.completeActiveBreak()
+        overlayController.onEscape = { [weak breakCoordinator] id in
+            breakCoordinator?.escapeActiveBreak(expectedBreakID: id)
         }
-        overlayController.onEscape = { [weak breakCoordinator] in
-            breakCoordinator?.escapeActiveBreak()
-        }
-        overlayController.onPostpone = { [weak breakCoordinator] in
-            breakCoordinator?.postponeActiveBreak()
+        overlayController.onPostpone = { [weak breakCoordinator] id in
+            breakCoordinator?.postponeActiveBreak(expectedBreakID: id)
         }
 
         breakCoordinator.start(with: enforceableSchedules(),
                                preferences: preferences,
-                               statistics: todayStats,
-                               restoring: state)
+                               statistics: restoredStatistics ?? todayStats,
+                               restoring: state,
+                               verifiedRestDuration: verifiedStartupRest,
+                               initiallyAway: systemAwayMonitor.confirmedReasons,
+                               strictScheduleIDs: Set(schedules.filter { $0.disciplineLevel == .strict }.map(\.id)))
+        verifiedStartupRest = 0
+        systemAwayMonitor.synchronize(breakCoordinator)
+        refreshDismissalAvailability()
 
         eventListenerTask = Task {
             for await event in breakCoordinator.events {
+                guard !Task.isCancelled, self.coordinator === breakCoordinator else { return }
                 handleEvent(event)
             }
         }
@@ -380,7 +414,6 @@ final class AppCoordinator: ObservableObject {
         coordinator?.stop()
         coordinator = nil
         overlayController.onSkip = nil
-        overlayController.onComplete = nil
         overlayController.onEscape = nil
         overlayController.onPostpone = nil
         clearActiveBreakState()
@@ -404,12 +437,18 @@ final class AppCoordinator: ObservableObject {
     }
 
     private func carriedStateForToday() -> EnforcementState {
-        guard Calendar.current.isDateInToday(carriedEnforcementDay) else { return EnforcementState() }
         // The coordinator carries a disabled schedule's slot without knowing whether the
         // schedule still exists; a deleted one's slot stops here.
         var state = carriedEnforcementState
+        if !Calendar.current.isDateInToday(carriedEnforcementDay) { state.resetDailyCounters() }
         let ids = Set(schedules.map(\.id))
         state.pendingBreakDates = state.pendingBreakDates.filter { ids.contains($0.key) }
+        state.consecutiveDismissalCounts = state.consecutiveDismissalCounts.filter { ids.contains($0.key) }
+        if var recovery = state.recovery {
+            recovery.breaks = recovery.breaks.filter { ids.contains($0.key) }
+            recovery.remainingWork = recovery.remainingWork.filter { ids.contains($0.key) }
+            state.recovery = recovery
+        }
         return state
     }
 
@@ -417,44 +456,71 @@ final class AppCoordinator: ObservableObject {
     /// the carry from the last teardown is still the current state and is written as it is.
     private func saveEnforcementState() {
         if let coordinator {
-            carriedEnforcementState = coordinator.captureEnforcementState()
-            carriedEnforcementDay = Date()
+            persistCoordinatorState(coordinator.captureEnforcementState(), statistics: coordinator.currentStatistics)
+        } else {
+            persistCoordinatorState(carriedStateForToday(), statistics: todayStats)
         }
-        guard let data = try? JSONEncoder().encode(carriedEnforcementState) else { return }
+    }
+
+    @discardableResult
+    private func persistCoordinatorState(_ state: EnforcementState, statistics: BreakStatistics) -> Bool {
+        carriedEnforcementState = state
+        carriedEnforcementDay = Date()
+        let exit = terminationReason.flatMap { reason in
+            shutdownHistory.currentBoot().map { SystemExitRecord(reason: reason, requestedAt: Date(), boot: $0) }
+        }
+        guard checkpointPersistence.save(CoordinatorCheckpoint(enforcement: state, statistics: statistics,
+            dailyRecord: dailyHistoryRecord(statistics), exit: exit)) else { return false }
+        // Keep legacy mirrors current for compatibility; the atomic checkpoint is authoritative.
+        guard let data = try? JSONEncoder().encode(carriedEnforcementState) else { return true }
         UserDefaults.standard.set(data, forKey: "enforcementState")
         UserDefaults.standard.set(carriedEnforcementDay, forKey: "enforcementStateDay")
+        if let stats = try? JSONEncoder().encode(statistics) { UserDefaults.standard.set(stats, forKey: "statistics") }
+        return true
     }
+
+    func prepareForTermination(reason: SystemTerminationReason) {
+        terminationReason = reason
+        saveEnforcementState()
+    }
+
+    func suspendForTerminationPrompt() { coordinator?.suspendForTerminationPrompt() }
+    func resumeAfterTerminationPrompt() { coordinator?.resumeAfterTerminationPrompt() }
 
     private func restartCoordinator() {
         // Captured before the teardown: every counter below lives on the coordinator instance,
         // so a rebuild would otherwise re-arm the daily cap from zero and restart the interval
         // cycle -- editing a schedule at noon quietly undid the morning's enforcement.
+        let statistics = coordinator?.currentStatistics ?? todayStats
         saveEnforcementState()
-        // A pause is a user decision with a deadline, not coordinator bookkeeping. The rebuilt
-        // coordinator starts unpaused and arms a break straight away, so the time still owed has
-        // to be re-applied -- otherwise editing a schedule ends a pause the user asked for, and
-        // the next break lands during the hour they meant to keep clear. Re-applying it yields
-        // `schedulePaused`, which restores the published flags below through `handleEvent`.
-        let pauseRemaining = pausedUntil?.timeIntervalSinceNow
         stopCoordinator()
-        isPaused = false
-        pausedUntil = nil
-        if !schedules.filter(\.isEnabled).isEmpty {
-            startCoordinator(restoring: carriedStateForToday())
-            if let pauseRemaining, pauseRemaining > 0 {
-                coordinator?.pause(for: pauseRemaining)
-            }
-        } else {
+        startCoordinator(restoring: carriedStateForToday(), statistics: statistics)
+        if !schedules.contains(where: \.isEnabled) {
             nextBreakTime = nil
             breakScheduledAt = nil
             breakProgress = 0
         }
     }
 
+    func refreshDismissalAvailability() {
+        canSkipNextBreak = coordinator?.canSkipNextBreak ?? false
+        canPauseScheduling = coordinator?.canPauseScheduling ?? true
+        pendingSkipSlotID = coordinator?.pendingSlotID
+    }
+
     // MARK: - Event Handling
 
     private func handleEvent(_ event: CoordinatorEvent) {
         switch event {
+        case .enforcementStateChanged:
+            refreshDismissalAvailability()
+            saveEnforcementState()
+
+        case .systemSuspensionChanged(let suspended):
+            isSystemSuspended = suspended
+            if suspended { clearActiveBreakState() }
+            updateMenuBarTimer()
+
         case .nextBreakScheduled(let date):
             deferralReason = nil
             // Not always `Date()`: a rebuilt coordinator re-arms the slot it inherited, and
@@ -525,9 +591,18 @@ final class AppCoordinator: ObservableObject {
         var incoming = schedules
         incoming[index] = schedule
         if let failure = scheduleMutationFailure(incoming: incoming) { return .failure(failure) }
+        var previous = schedules[index]
+        previous.progressiveEnforcement = schedule.progressiveEnforcement
+        previous.consecutiveSkipLimit = schedule.consecutiveSkipLimit
         schedules = incoming
         saveSchedules()
-        restartCoordinator()
+        if previous == schedule, let coordinator {
+            coordinator.updateEnforcementSettings(for: schedule)
+            refreshDismissalAvailability()
+            saveEnforcementState()
+        } else {
+            restartCoordinator()
+        }
         return .success(())
     }
 
@@ -579,8 +654,9 @@ final class AppCoordinator: ObservableObject {
 
     // MARK: - Quick Actions
 
-    func skipNextBreak() {
-        coordinator?.skipNextBreak()
+    func skipNextBreak(expectedSlotID: UUID?) {
+        guard let expectedSlotID else { return }
+        coordinator?.skipNextBreak(expectedSlotID: expectedSlotID)
     }
 
     func pauseSchedule(for duration: TimeInterval) {
@@ -607,28 +683,16 @@ final class AppCoordinator: ObservableObject {
     // MARK: - System Sleep
 
     private func observeSystemSleep() {
-        let center = NSWorkspace.shared.notificationCenter
-        center.addObserver(forName: NSWorkspace.willSleepNotification, object: nil, queue: .main) { [weak self] _ in
-            MainActor.assumeIsolated {
-                self?.coordinator?.handleSystemSleep()
+        systemAwayMonitor.start { [weak self] reason, active in
+            guard let self, let coordinator = self.coordinator else { return }
+            switch reason {
+            case .locked:
+                active ? coordinator.handleScreenLock() : coordinator.handleScreenUnlock()
+            case .sleeping:
+                active ? coordinator.handleSystemSleep() : coordinator.handleSystemWake()
             }
-        }
-        center.addObserver(forName: NSWorkspace.didWakeNotification, object: nil, queue: .main) { [weak self] _ in
-            MainActor.assumeIsolated {
-                self?.coordinator?.handleSystemWake()
-            }
-        }
-
-        let distributed = DistributedNotificationCenter.default()
-        distributed.addObserver(forName: .init("com.apple.screenIsLocked"), object: nil, queue: .main) { [weak self] _ in
-            MainActor.assumeIsolated {
-                self?.coordinator?.handleScreenLock()
-            }
-        }
-        distributed.addObserver(forName: .init("com.apple.screenIsUnlocked"), object: nil, queue: .main) { [weak self] _ in
-            MainActor.assumeIsolated {
-                self?.coordinator?.handleScreenUnlock()
-            }
+            self.refreshDismissalAvailability()
+            self.saveEnforcementState()
         }
     }
 
@@ -638,6 +702,7 @@ final class AppCoordinator: ObservableObject {
         progressTimer = Task {
             while !Task.isCancelled {
                 rolloverDailyStatsIfNeeded()
+                refreshDismissalAvailability()
                 recalculateProgress()
                 updateMenuBarTimer()
 
@@ -671,14 +736,14 @@ final class AppCoordinator: ObservableObject {
             showFullTimer: preferences.showFullWorkTimer,
             countdownMinutes: preferences.menuBarCountdownMinutes,
             isBreakActive: isBreakActive,
-            isPaused: isPaused,
+            isPaused: isPaused || isSystemSuspended,
             hasScheduledBreak: nextBreakTime != nil,
             minuteSuffix: languageStore.string("m")
         )
     }
 
     private func recalculateProgress() {
-        if isPaused { return }
+        if isPaused || isSystemSuspended { return }
         breakProgress = calculateBreakProgress(
             scheduledAt: breakScheduledAt,
             nextBreak: nextBreakTime,

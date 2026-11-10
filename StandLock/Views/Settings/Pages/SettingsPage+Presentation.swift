@@ -63,7 +63,7 @@ extension SettingsPage {
         case .breakScreen:
             [
                 "Break Screen", "Look", "Custom Break Colors", "Background", "Text", "Preview", "Content",
-                "Show Statistics", "Break Message", "During a break", "Pause Media",
+                "Rest & Recall", "During a break", "Pause Media",
                 "Sound when a break ends", "Sound before a break",
             ]
         case .discipline:
@@ -79,7 +79,7 @@ extension SettingsPage {
             [
                 "Detection", "Calls", "Camera Detection", "Microphone Detection", "Return after call",
                 "Calendar", "Calendar Integration", "Look-ahead", "Calendars",
-                "Screen Sharing", "After sharing ends", "Idle", "Idle as Break",
+                "Screen Sharing", "After sharing ends", "Time away", "Time away counts as a break after",
             ]
         case .permissions:
             ["Permissions", "Accessibility", "Input Monitoring", "Calendar Access"]
@@ -99,7 +99,8 @@ extension SettingsPage {
     private static let scheduleFormTerms: [LocalizedStringResource] = [
         "Schedules", "Enabled", "Name", "When", "Hours", "Rhythm", "Break every", "Break lasts",
         "Alternating intervals", "Repetition Cycle", "Short breaks", "Short break", "Long break", "Discipline",
-        "Gentle", "Firm", "Strict", "Progressive Enforcement", "Your day",
+        "Gentle", "Firm", "Strict", "Progressive Enforcement", "Limit consecutive skips",
+        "Maximum consecutive skips", "Zero skips", "Hard block", "Your day",
         "Vary work intervals", "Add longer breaks", "Work duration", "Short break duration",
         "Short breaks before a longer break", "Longer break duration", "24-hour day", "Clock",
         "Short break time", "Long break time",

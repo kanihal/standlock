@@ -15,13 +15,12 @@
 [![Website](https://img.shields.io/badge/website-standlock.app-blue)](https://standlock.app?ref=github-readme)
 [![BuyMeACoffee](https://raw.githubusercontent.com/pachadotdev/buymeacoffee-badges/main/bmc-donate-yellow.svg)](https://buymeacoffee.com/yagizdo)
 
-<img src="assets/break-gentle.png" width="820" alt="StandLock break overlay with a countdown and an exercise suggestion">
 
 </div>
 
 You know you should stand up. You've also dismissed every reminder that told you so.
 
-StandLock doesn't ask. When a break is due, it covers every display with a countdown and an exercise, and you choose beforehand how hard it is to get out of. It's free and open source, written in Swift. There's no account to make and no analytics.
+StandLock doesn't ask. When a break is due, it covers every display with **Rest & Recall** and a small corner timer, and you choose beforehand how hard it is to get out of. It's free and open source, written in Swift. There's no account to make and no analytics.
 
 ```bash
 brew install --cask yagizdo/tap/standlock
@@ -35,19 +34,17 @@ Or [download the DMG](https://github.com/yagizdo/StandLock/releases/latest) and 
 
 | Level | How you get out |
 |-------|-----------------|
-| Gentle | Click skip |
-| Firm | Wait, then type a phrase |
-| Strict | Input is blocked. Hold Ctrl+Option+Command to exit |
+| Gentle | Hold Ctrl+Option+Command for 30 seconds |
+| Firm | Hold Ctrl+Option+Command for 40 seconds by default |
+| Strict | Input is blocked; Skip, Pause, and Postpone are disabled. Hold Ctrl+Option+Command for emergency escape |
 
 - Set a level per schedule and change it anytime
-- Turn on escalation and each skip makes the next break harder: a button that runs from your cursor, mini-games, sentences you'd rather not type
+- Every break screen shows only **Rest & Recall** and a small timer at the bottom right
+- Turn on escalation and each skip increases the emergency hold time
 - Complete a break and escalation resets
+- Optionally limit consecutive skips per schedule, including emergency exits; complete a break to restore the allowance
+- Set the consecutive limit to **0** to disable skipping, emergency escape, postponement, and manual pauses
 - Daily skip limits for Gentle and Firm
-
-<p align="center">
-  <img src="assets/break-firm.png" height="230" alt="Firm break screen asking you to type a phrase to dismiss">
-  <img src="assets/escalation.gif" height="230" alt="The skip button moving away from the cursor">
-</p>
 
 ### Fits your day
 
@@ -56,7 +53,7 @@ Or [download the DMG](https://github.com/yagizdo/StandLock/releases/latest) and 
 - Alternating intervals, like 58 minutes sitting and 28 standing
 - Every break of the day listed before you save
 - Breaks wait for meetings, screen recordings, screen sharing and calendar events
-- If you were already away from your desk, the break counts as done
+- Screen lock or system sleep counts as a break after a configurable threshold (five minutes by default). Shorter absences pause the countdown; unlocked inactivity remains work time.
 - You can postpone a break once when a call comes up
 
 <p align="center"><img src="assets/schedules.png" width="460" alt="Schedule form with days, hours, alternating intervals and the day's break times"></p>

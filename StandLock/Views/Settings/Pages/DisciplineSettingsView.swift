@@ -7,7 +7,7 @@ struct DisciplineSettingsView: View {
         SettingsPageLayout("Discipline") {
             SettingsSection(
                 "Daily skip limits",
-                note: "Strict has no skip limit; only the emergency escape combo ends a break early."
+                note: "Strict disables skipping, postponing, and manual pauses. Emergency escape remains available unless the consecutive skip limit is reached."
             ) {
                 skipLimitRow(
                     "Gentle",

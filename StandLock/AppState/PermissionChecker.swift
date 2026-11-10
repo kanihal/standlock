@@ -214,7 +214,7 @@ final class PermissionChecker: ObservableObject {
             let alert = NSAlert()
             alert.messageText = languageStore.string("Restart Failed")
             alert.informativeText = languageStore.string(
-                "Could not relaunch StandLock. Please reopen the app manually."
+                "Could not relaunch standlock - block timer. Please reopen the app manually."
             )
             alert.alertStyle = .warning
             alert.runModal()
@@ -231,7 +231,7 @@ final class PermissionChecker: ObservableObject {
         let alert = NSAlert()
         alert.messageText = languageStore.string("\(localizedName) Permission Granted")
         alert.informativeText = languageStore.string(
-            "StandLock needs to restart to apply this permission."
+            "standlock - block timer needs to restart to apply this permission."
         )
         alert.addButton(withTitle: languageStore.string("Restart Now"))
         alert.addButton(withTitle: languageStore.string("Later"))

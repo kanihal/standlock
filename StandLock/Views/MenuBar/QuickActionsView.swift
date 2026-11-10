@@ -9,6 +9,7 @@ struct QuickActionsView: View {
 
     var body: some View {
         // Tight spacing leaves the two equal pills room for the longest title, Turkish "Duraklat".
+        let slotID = coordinator.pendingSkipSlotID
         HStack(spacing: 5) {
             if coordinator.isPaused {
                 Button {
@@ -19,12 +20,12 @@ struct QuickActionsView: View {
                 .buttonStyle(MenuBarPillStyle())
             } else {
                 Button {
-                    coordinator.skipNextBreak()
+                    coordinator.skipNextBreak(expectedSlotID: slotID)
                 } label: {
                     pill("Skip", symbol: "forward.end")
                 }
                 .buttonStyle(MenuBarPillStyle())
-                .disabled(!coordinator.schedules.contains(where: \.isEnabled) || coordinator.isBreakActive)
+                .disabled(!coordinator.canSkipNextBreak)
 
                 Button {
                     showPauseMenu()
@@ -32,10 +33,10 @@ struct QuickActionsView: View {
                     pill("Pause", symbol: "pause.circle")
                 }
                 .buttonStyle(MenuBarPillStyle())
-                .disabled(coordinator.schedules.isEmpty)
+                .disabled(coordinator.schedules.isEmpty || !coordinator.canPauseScheduling)
             }
 
-            iconButton("About StandLock", symbol: "info.circle") {
+            iconButton("About standlock - block timer", symbol: "info.circle") {
                 coordinator.settingsNavigation.open(.about, using: openWindow)
             }
 
@@ -43,7 +44,7 @@ struct QuickActionsView: View {
                 coordinator.settingsNavigation.open(.general, using: openWindow)
             }
 
-            iconButton("Quit StandLock", symbol: "power") {
+            iconButton("Quit standlock - block timer", symbol: "power") {
                 isConfirmingQuit = true
             }
             .disabled(coordinator.isBreakActive)
@@ -54,6 +55,7 @@ struct QuickActionsView: View {
                 }
             }
         }
+        .onAppear { coordinator.refreshDismissalAvailability() }
     }
 
     private func iconButton(_ title: LocalizedStringKey, symbol: String, action: @escaping () -> Void) -> some View {
@@ -78,6 +80,7 @@ struct QuickActionsView: View {
     }
 
     private func showPauseMenu() {
+        guard coordinator.canPauseScheduling else { return }
         let handler = PauseMenuHandler(coordinator: coordinator)
         let menu = NSMenu()
 

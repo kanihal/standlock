@@ -13,7 +13,7 @@ struct GeneralSettingsView: View {
                 SettingsToggleRow(
                     "Launch at Startup",
                     symbol: "power",
-                    description: "Open StandLock when you log in",
+                    description: "Open standlock - block timer when you log in",
                     isOn: $launchAtStartup
                 )
                 .onChange(of: launchAtStartup) { newValue in
