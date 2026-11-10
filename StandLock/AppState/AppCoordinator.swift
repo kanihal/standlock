@@ -32,7 +32,7 @@ final class AppCoordinator: ObservableObject {
     @Published var deferralReason: DeferralReason?
     @Published var isPaused: Bool = false
     @Published var pausedUntil: Date?
-    @Published var schedules: [Schedule] = []
+    @Published private(set) var schedules: [Schedule] = []
     @Published var preferences: AppPreferences = AppPreferences()
     @Published var hasCompletedOnboarding: Bool = false
     @Published private(set) var breakProgress: Double = 0
@@ -42,6 +42,8 @@ final class AppCoordinator: ObservableObject {
     let languageStore = LanguageStore()
     let themeStore = ThemeStore()
     let settingsNavigation = SettingsNavigation()
+    let scheduleEditLocks = ScheduleEditLockStore()
+    private lazy var mathChallengeWindow = MathChallengeWindowController(store: scheduleEditLocks, languageStore: languageStore)
     let permissionChecker: PermissionChecker
     private let breakSoundPlayer = BreakSoundPlayer()
 
@@ -70,6 +72,7 @@ final class AppCoordinator: ObservableObject {
     private var policyBeforeOnboarding: NSApplication.ActivationPolicy = .accessory
     private var permissionSyncCancellable: AnyCancellable?
     private var calendarStatusCancellable: AnyCancellable?
+    private var scheduleLockCancellable: AnyCancellable?
     /// Tracks the calendar grant so the store is reset exactly on the false -> true transition.
     private var lastCalendarAuthorized = false
 
@@ -81,6 +84,10 @@ final class AppCoordinator: ObservableObject {
         themeStore.applyAppearance()
         loadExercises()
         loadData()
+        scheduleEditLocks.retainSchedules(Set(schedules.map(\.id)))
+        scheduleLockCancellable = scheduleEditLocks.objectWillChange.sink { [weak self] _ in
+            self?.objectWillChange.send()
+        }
         applyCalendarPreferences()
         refreshAvailableCalendars()
         syncPreferencesWithPermissions()
@@ -92,6 +99,7 @@ final class AppCoordinator: ObservableObject {
         ) { [weak self] _ in
             MainActor.assumeIsolated {
                 self?.saveEnforcementState()
+                self?.scheduleEditLocks.pauseAll()
             }
         }
         NotificationCenter.default.addObserver(
@@ -502,35 +510,71 @@ final class AppCoordinator: ObservableObject {
 
     // MARK: - Schedule Management
 
-    func addSchedule(_ schedule: Schedule) {
+    @discardableResult
+    func addSchedule(_ schedule: Schedule) -> Result<Void, ScheduleMutationFailure> {
+        guard !schedules.contains(where: { $0.id == schedule.id }) else { return .failure(.duplicateID) }
         schedules.append(schedule)
         saveSchedules()
         restartCoordinator()
+        return .success(())
     }
 
-    func updateSchedule(_ schedule: Schedule) {
-        if let index = schedules.firstIndex(where: { $0.id == schedule.id }) {
-            schedules[index] = schedule
-            saveSchedules()
-            restartCoordinator()
-        }
-    }
-
-    func deleteSchedule(_ schedule: Schedule) {
-        schedules.removeAll { $0.id == schedule.id }
+    @discardableResult
+    func updateSchedule(_ schedule: Schedule) -> Result<Void, ScheduleMutationFailure> {
+        guard let index = schedules.firstIndex(where: { $0.id == schedule.id }) else { return .failure(.missingSchedule) }
+        var incoming = schedules
+        incoming[index] = schedule
+        if let failure = scheduleMutationFailure(incoming: incoming) { return .failure(failure) }
+        schedules = incoming
         saveSchedules()
         restartCoordinator()
+        return .success(())
+    }
+
+    @discardableResult
+    func deleteSchedule(_ schedule: Schedule) -> Result<Void, ScheduleMutationFailure> {
+        guard schedules.contains(where: { $0.id == schedule.id }) else { return .failure(.missingSchedule) }
+        let incoming = schedules.filter { $0.id != schedule.id }
+        if let failure = scheduleMutationFailure(incoming: incoming) { return .failure(failure) }
+        schedules = incoming
+        scheduleEditLocks.remove(schedule.id)
+        saveSchedules()
+        restartCoordinator()
+        return .success(())
     }
 
     /// Replaces preferences and schedules from a settings file. Preferences go first so the
     /// rebuilt coordinator starts with them; the restart carries today's counters.
-    func applyImport(preferences: AppPreferences, schedules: [Schedule]) {
+    @discardableResult
+    func applyImport(preferences: AppPreferences, schedules: [Schedule]) -> Result<Void, ScheduleMutationFailure> {
+        if let failure = scheduleMutationFailure(incoming: schedules) { return .failure(failure) }
         self.preferences = preferences
         savePreferences()
         syncPreferencesWithPermissions()
         self.schedules = schedules
+        scheduleEditLocks.retainSchedules(Set(schedules.map(\.id)))
         saveSchedules()
         restartCoordinator()
+        return .success(())
+    }
+
+    func lockScheduleEditing(_ id: UUID) {
+        guard schedules.contains(where: { $0.id == id }) else { return }
+        scheduleEditLocks.lock(id)
+    }
+
+    func openScheduleChallenge(_ schedule: Schedule) {
+        guard let current = schedules.first(where: { $0.id == schedule.id }), scheduleEditLocks.isLocked(current.id),
+              !isBreakActive else { return }
+        mathChallengeWindow.open(current)
+    }
+
+    private func scheduleMutationFailure(incoming: [Schedule]) -> ScheduleMutationFailure? {
+        guard Set(incoming.map(\.id)).count == incoming.count else { return .duplicateID }
+        let blocked = ScheduleEditPolicy.blockedIDs(
+            current: schedules, incoming: incoming, locks: scheduleEditLocks.records, at: scheduleEditLocks.now
+        )
+        return blocked.isEmpty ? nil : .locked(blocked)
     }
 
     // MARK: - Quick Actions

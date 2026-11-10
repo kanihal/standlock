@@ -39,16 +39,19 @@ private struct SchedulePage: View {
     }
 
     private var isDirty: Bool { draft.hasChanges(from: baseline) }
+    private var isLocked: Bool { schedule.map { coordinator.scheduleEditLocks.isLocked($0.id) } ?? false }
 
     var body: some View {
         VStack(spacing: 0) {
             SettingsPageLayout(title: title, accessory: { enableToggle }) {
                 if let schedule {
                     ScheduleStatusView(schedule: schedule)
+                    ScheduleEditingLockSection(schedule: schedule, hasUnsavedEdits: isDirty)
                 } else if coordinator.schedules.isEmpty {
                     emptyNote
                 }
                 ScheduleFormView(draft: $draft, schedule: schedule)
+                    .disabled(isLocked)
                     .environment(\.settingsRowTone, .strict)
                     // Not `.keyboardShortcut`: in a pane that reaches the whole window, sidebar
                     // and search included. These two need focus inside the form.
@@ -65,10 +68,9 @@ private struct SchedulePage: View {
             presenting: navigation.pendingLeave
         ) { leave in
             // Left out, not disabled: an alert button cannot explain why it is dimmed.
-            if draft.canSave {
+            if draft.canSave && !isLocked {
                 Button("Save") {
-                    saveAndStay()
-                    navigation.finish(leave)
+                    if saveAndStay() { navigation.finish(leave) }
                 }
             }
             Button("Discard", role: .destructive) {
@@ -94,6 +96,7 @@ private struct SchedulePage: View {
     }
 
     private var leaveMessage: LocalizedStringKey {
+        if isLocked { return "This schedule is locked. Unlock editing to save your changes, or discard them." }
         if draft.canSave { return "Your changes to this schedule have not been saved." }
         if draft.days.isEmpty {
             return draft.hasName
@@ -125,6 +128,7 @@ private struct SchedulePage: View {
             .toggleStyle(.switch)
             .tint(.green)
             .controlSize(.small)
+            .disabled(isLocked)
         }
     }
 
@@ -143,13 +147,14 @@ private struct SchedulePage: View {
             if schedule != nil {
                 Button("Delete", role: .destructive) { showDeleteConfirmation = true }
                     .foregroundStyle(.red)
+                    .disabled(isLocked)
             }
             Spacer()
             Button("Cancel") { cancel() }
                 .disabled(!isDirty && (schedule != nil || coordinator.schedules.isEmpty))
             Button(schedule == nil ? "Add Schedule" : "Save") { saveAndStay() }
                 .buttonStyle(.borderedProminent)
-                .disabled(!draft.canSubmit(from: baseline))
+                .disabled(isLocked || !draft.canSubmit(from: baseline))
         }
         .padding(SettingsTokens.footerInsets)
     }
@@ -164,18 +169,19 @@ private struct SchedulePage: View {
 
     /// Return lands here too, so nothing the Save button would refuse goes through: a nameless
     /// schedule, or a restart of enforcement with nothing changed.
-    private func saveAndStay() {
-        guard draft.canSubmit(from: baseline) else { return }
+    @discardableResult
+    private func saveAndStay() -> Bool {
+        guard !isLocked, draft.canSubmit(from: baseline) else { return false }
         let saved = draft.build(existing: schedule)
+        let result = schedule == nil ? coordinator.addSchedule(saved) : coordinator.updateSchedule(saved)
+        guard case .success = result else { return false }
         // Reloaded because the pane stays open: the form must show what was stored.
         draft = ScheduleDraft(schedule: saved)
         baseline = draft
         if schedule == nil {
-            coordinator.addSchedule(saved)
             navigation.leave(to: .schedule(saved.id))
-        } else {
-            coordinator.updateSchedule(saved)
         }
+        return true
     }
 
     private func cancel() {

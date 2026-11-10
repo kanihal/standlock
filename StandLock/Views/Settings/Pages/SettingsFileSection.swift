@@ -141,7 +141,11 @@ struct SettingsFileSection: View {
     }
 
     private func apply(_ imported: SettingsExport) {
-        coordinator.applyImport(preferences: imported.preferences, schedules: imported.schedules)
+        let result = coordinator.applyImport(preferences: imported.preferences, schedules: imported.schedules)
+        guard case .success = result else {
+            show(.importFailed(message: languageStore.string("Unlock protected schedules before importing a file that changes or removes them.")))
+            return
+        }
         themeStore.select(imported.theme)
         languageStore.select(imported.language)
         showHelp = imported.showHelp

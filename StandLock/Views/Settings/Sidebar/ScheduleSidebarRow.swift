@@ -3,6 +3,7 @@ import StandLockCore
 
 struct ScheduleSidebarRow: View {
     @Environment(\.colorScheme) private var colorScheme
+    @EnvironmentObject private var coordinator: AppCoordinator
 
     let schedule: Schedule
     let isSelected: Bool
@@ -14,6 +15,12 @@ struct ScheduleSidebarRow: View {
                     .lineLimit(1)
                     .foregroundStyle(schedule.isEnabled ? .primary : .secondary)
                 Spacer(minLength: 0)
+                if coordinator.scheduleEditLocks.isLocked(schedule.id) {
+                    Image(systemName: "lock.fill")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                        .help("Editing Locked")
+                }
                 if schedule.isEnabled {
                     dot(Color(nsColor: .systemGreen))
                 }
@@ -29,6 +36,7 @@ struct ScheduleSidebarRow: View {
             Text(schedule.isEnabled ? "Enabled" : "Disabled")
                 + Text(verbatim: ", ")
                 + Text(LocalizedStringKey(schedule.disciplineLevel.displayName))
+                + Text(coordinator.scheduleEditLocks.isLocked(schedule.id) ? ", Editing Locked" : "")
         )
     }
 

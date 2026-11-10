@@ -30,6 +30,8 @@ When you change behaviour in `StandLockKit`, update the tests that cover it. New
 
 Rhythm number fields also have a standalone UI regression test. Run `bash StandLockKit/Tests/SettingsUI/run.sh` from a macOS desktop session; it compiles and exercises the actual settings controls.
 
+The schedule-editing challenge has a native window regression too: run `bash StandLockKit/Tests/SettingsUI/run-math.sh`. It uses an isolated preferences suite to check window focus, typeset equations, answer credit, and persistence without changing your schedules.
+
 One thing that will confuse you at some point: after you add or remove a stored property on a model, the suite may die with `signal code 11` and no failing test name. That is SPM linking a test target against a stale build. Run `swift package clean --package-path StandLockKit` and try again.
 
 ## Code

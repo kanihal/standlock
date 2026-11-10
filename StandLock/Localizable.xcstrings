@@ -1,6 +1,123 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Unlock Schedule" : {
+      "extractionState" : "manual"
+    },
+    "Unlock Editing" : {
+      "extractionState" : "manual"
+    },
+    "120 problem types" : {
+      "extractionState" : "manual"
+    },
+    "Schedule Unlocked" : {
+      "extractionState" : "manual"
+    },
+    "Editing is available until %@." : {
+      "extractionState" : "manual"
+    },
+    "You can return to Settings to edit this schedule." : {
+      "extractionState" : "manual"
+    },
+    "Progress reset after a break longer than five minutes." : {
+      "extractionState" : "manual"
+    },
+    "Start a Fresh Problem" : {
+      "extractionState" : "manual"
+    },
+    "Numeric answer or fraction" : {
+      "extractionState" : "manual"
+    },
+    "Answer" : {
+      "extractionState" : "manual"
+    },
+    "Submit" : {
+      "extractionState" : "manual"
+    },
+    "Enter an exact integer." : {
+      "extractionState" : "manual"
+    },
+    "Enter a fraction or use at least six decimal places. Scientific notation is accepted." : {
+      "extractionState" : "manual"
+    },
+    "Each correct answer credits two minutes. Switching windows or going idle for 60 seconds pauses solving. Any break longer than five minutes resets progress." : {
+      "extractionState" : "manual"
+    },
+    "Time credited: %@ / 30:00" : {
+      "extractionState" : "manual"
+    },
+    "%lld / 15 correct" : {
+      "extractionState" : "manual"
+    },
+    "Active solving: %@" : {
+      "extractionState" : "manual"
+    },
+    "Paused — interact with this window to resume" : {
+      "extractionState" : "manual"
+    },
+    "Progress resets after %@ away." : {
+      "extractionState" : "manual"
+    },
+    "Correct. Two minutes credited." : {
+      "extractionState" : "manual"
+    },
+    "That answer is incorrect. Try again." : {
+      "extractionState" : "manual"
+    },
+    "Enter a finite number or a fraction with a nonzero denominator." : {
+      "extractionState" : "manual"
+    },
+    "Return to this window to resume." : {
+      "extractionState" : "manual"
+    },
+    "The previous problem expired. Solve the fresh problem to earn credit." : {
+      "extractionState" : "manual"
+    },
+    "Schedule Editing" : {
+      "extractionState" : "manual"
+    },
+    "Editing Locked" : {
+      "extractionState" : "manual"
+    },
+    "Lock Schedule" : {
+      "extractionState" : "manual"
+    },
+    "Lock Now" : {
+      "extractionState" : "manual"
+    },
+    "Solve 15 randomized graduate math problems to unlock editing for one hour. Each correct answer credits two minutes toward 30 minutes." : {
+      "extractionState" : "manual"
+    },
+    "Editing unlock expires at %@." : {
+      "extractionState" : "manual"
+    },
+    "Lock this schedule to require a math challenge before editing, disabling, or deleting it." : {
+      "extractionState" : "manual"
+    },
+    "Save or discard your changes before locking." : {
+      "extractionState" : "manual"
+    },
+    "Your unsaved changes are preserved. Unlock editing to save them." : {
+      "extractionState" : "manual"
+    },
+    "This schedule is locked. Unlock editing to save your changes, or discard them." : {
+      "extractionState" : "manual"
+    },
+    "Unlock protected schedules before importing a file that changes or removes them." : {
+      "extractionState" : "manual"
+    },
+    "Linear Algebra" : {
+      "extractionState" : "manual"
+    },
+    "Optimization" : {
+      "extractionState" : "manual"
+    },
+    "Probability & Statistics" : {
+      "extractionState" : "manual"
+    },
+    ", Editing Locked" : {
+      "extractionState" : "manual"
+    },
     "Long break time": {
       "extractionState": "manual",
       "localizations": {
