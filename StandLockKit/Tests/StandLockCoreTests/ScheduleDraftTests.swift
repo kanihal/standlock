@@ -130,6 +130,24 @@ struct ScheduleDraftTests {
         #expect(draft.build(existing: nil).repetitionRule == nil)
     }
 
+    @Test func fifteenMinutesOfWorkThenFiveHoursOfSleepRoundTrips() {
+        var draft = ScheduleDraft(schedule: nil)
+        draft.name = "Sleep"
+        draft.windows = [TimeWindow(startHour: 22, startMinute: 45, endHour: 4, endMinute: 0)]
+        draft.intervalRows = [IntervalRow(minutes: 15)]
+        draft.rhythmBreakMinutes = 300
+
+        let built = draft.build(existing: nil)
+
+        #expect(draft.canSave)
+        #expect(built.breakInterval == 900)
+        #expect(built.breakDuration == 18000)
+        #expect(built.repetitionRule == nil)
+        let loaded = ScheduleDraft(schedule: built)
+        #expect(loaded.rhythmBreakMinutes == 300)
+        #expect(loaded.build(existing: built) == built)
+    }
+
     @Test func newDraftDefaults() {
         let built = ScheduleDraft(schedule: nil).build(existing: nil)
         #expect(built.isEnabled)
@@ -169,21 +187,21 @@ struct ScheduleDraftTests {
         draft.intervalRows = [IntervalRow(minutes: 0), IntervalRow(minutes: 999)]
         draft.breakDurationMinutes = 0
         draft.useRepetition = true
-        draft.shortBreakMinutes = 500
+        draft.shortBreakMinutes = 5000
 
         let built = draft.build(existing: nil)
 
         #expect(built.intervalCycle?.map(\.duration) == [TimeInterval(60), TimeInterval(180 * 60)])
         #expect(built.breakInterval == TimeInterval(60))
         #expect(built.breakDuration == TimeInterval(6))
-        #expect(built.repetitionRule?.shortBreakDuration == TimeInterval(60 * 60))
+        #expect(built.repetitionRule?.shortBreakDuration == TimeInterval(86400))
     }
 
     /// A number field parses "NaN". It would stop the whole schedule list encoding.
     @Test func notANumberBecomesTheUpperBound() {
         var draft = ScheduleDraft(schedule: stored())
         draft.breakDurationMinutes = .nan
-        #expect(draft.build(existing: nil).breakDuration == TimeInterval(60 * 60))
+        #expect(draft.build(existing: nil).breakDuration == TimeInterval(86400))
     }
 
     /// The change check builds on every body pass, so a pasted number must not trap the multiply.

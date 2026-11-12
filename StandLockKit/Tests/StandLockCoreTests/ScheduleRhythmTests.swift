@@ -75,12 +75,25 @@ struct ScheduleRhythmTests {
         #expect(draft.build(existing: nil).repetitionRule?.shortBreakDuration == 2520)
     }
 
+    @Test func multiHourDurationsSurviveTogglingLongerBreaks() {
+        var draft = ScheduleDraft(schedule: stored(duration: 18000))
+        draft.setLongBreaksEnabled(true)
+        draft.longBreakMinutes = 360
+
+        #expect(draft.canSave)
+        #expect(draft.build(existing: nil).repetitionRule?.shortBreakDuration == 18000)
+        #expect(draft.build(existing: nil).repetitionRule?.longBreakDuration == 21600)
+
+        draft.setLongBreaksEnabled(false)
+        #expect(draft.build(existing: nil).breakDuration == 18000)
+    }
+
     @Test func outOfRangeLongDurationsCannotBeSavedOrOverflowThePreview() {
         var draft = ScheduleDraft(schedule: stored())
         draft.useRepetition = true
         draft.longBreakMinutes = .greatestFiniteMagnitude
         #expect(!draft.canSave)
         // build is called by the preview even before an invalid edit can be saved.
-        #expect(draft.build(existing: nil).repetitionRule?.longBreakDuration == 3600)
+        #expect(draft.build(existing: nil).repetitionRule?.longBreakDuration == 86400)
     }
 }

@@ -118,6 +118,14 @@ struct SettingsExportTests {
         #expect(decoded.language == nil)
     }
 
+    @Test func multiHourBreaksRoundTrip() throws {
+        var export = Self.full()
+        export.schedules[0].breakDuration = 18000
+        export.schedules[0].repetitionRule?.shortBreakDuration = 18000
+        export.schedules[0].repetitionRule?.longBreakDuration = 21600
+        #expect(try SettingsExport.decode(export.encoded()) == export)
+    }
+
     @Test func encodedCarriesFormatAndVersion() throws {
         let object = try #require(JSONSerialization.jsonObject(with: Self.full().encoded()) as? [String: Any])
         #expect(object["format"] as? String == SettingsExport.formatIdentifier)
@@ -272,7 +280,7 @@ struct SettingsExportTests {
         #expect(decoded.schedules[0].breakInterval == TimeInterval(6))
     }
 
-    @Test(arguments: [3601.0, 366.0 * 86_400])
+    @Test(arguments: [86401.0, 366.0 * 86_400])
     func unsafeBreakDurationsAreUnreadable(duration: Double) throws {
         let data = try Self.editedSchedule { $0["breakDuration"] = duration }
         #expect(Self.decodeError(data) == .unreadable)
@@ -282,7 +290,7 @@ struct SettingsExportTests {
     func unsafeRepetitionDurationsAreUnreadable(key: String) throws {
         let data = try Self.editedSchedule { schedule in
             var rule = schedule["repetitionRule"] as! [String: Any]
-            rule[key] = 3601.0
+            rule[key] = 86401.0
             schedule["repetitionRule"] = rule
         }
         #expect(Self.decodeError(data) == .unreadable)
@@ -303,8 +311,8 @@ struct SettingsExportTests {
     @Test func safetyBoundaryValuesStayReadable() throws {
         var export = Self.full()
         export.preferences.strictEscapeHoldDuration = 30
-        export.schedules[0].breakDuration = 3600
-        export.schedules[0].repetitionRule?.longBreakDuration = 3600
+        export.schedules[0].breakDuration = 86400
+        export.schedules[0].repetitionRule?.longBreakDuration = 86400
         #expect(try SettingsExport.decode(export.encoded()) == export)
     }
 

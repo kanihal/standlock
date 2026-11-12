@@ -126,12 +126,12 @@ struct BreakCoordinatorTests {
         coordinator.start(with: [schedule], preferences: AppPreferences())
 
         #expect(await waitUntil { locker.showOverlayCalled })
-        #expect(locker.lastDuration == 3600)
+        #expect(locker.lastDuration == 86400)
         if repeating {
             locker.showOverlayCalled = false
             coordinator.completeActiveBreak()
             #expect(await waitUntil { locker.showOverlayCalled })
-            #expect(locker.lastDuration == 3600)
+            #expect(locker.lastDuration == 86400)
         }
     }
 

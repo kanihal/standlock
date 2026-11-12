@@ -2,7 +2,7 @@ import Foundation
 
 /// Recovery limits apply to imported files and preferences saved by older releases.
 public enum BreakSafety {
-    public static let maximumBreakDuration: TimeInterval = 60 * 60
+    public static let maximumBreakDuration: TimeInterval = 24 * 60 * 60
     public static let maximumEscapeHoldDuration: TimeInterval = 30
     public static let maximumSkipDelay: TimeInterval = 60
 

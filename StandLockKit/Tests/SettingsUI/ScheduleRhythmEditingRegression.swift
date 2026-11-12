@@ -110,6 +110,29 @@ struct ScheduleRhythmEditingRegression {
         finalEditor.doCommand(by: #selector(NSResponder.insertNewline(_:)))
         updateUI()
         precondition(model.draft.longBreakMinutes == 5, "Clamp minutes on Return")
+
+        replace("360", in: finalEditor)
+        finalEditor.doCommand(by: #selector(NSResponder.insertNewline(_:)))
+        updateUI()
+        precondition(model.draft.longBreakMinutes == 360, "Keep multi-hour longer breaks on Return")
+
+        model.draft.setLongBreaksEnabled(false)
+        updateUI()
+        guard let regularBreak = fields(in: host).first(where: { $0.stringValue == "0.5" })
+        else { fatalError("Missing regular break control") }
+        window.makeFirstResponder(work)
+        updateUI()
+        guard let singleWorkEditor = work.currentEditor() as? NSTextView else { fatalError("Missing work editor") }
+        replace("15", in: singleWorkEditor)
+        window.makeFirstResponder(regularBreak)
+        updateUI()
+        guard let sleepEditor = regularBreak.currentEditor() as? NSTextView else { fatalError("Missing sleep editor") }
+        replace("300", in: sleepEditor)
+        window.makeFirstResponder(work)
+        updateUI()
+        precondition(model.draft.rhythmBreakMinutes == 300, "Keep a five-hour break on focus loss")
+        let saved = model.draft.build(existing: nil)
+        precondition(saved.breakInterval == 900 && saved.breakDuration == 18000, "Save 15 minutes of work and five hours of sleep")
         window.close()
     }
 }

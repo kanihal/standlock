@@ -19,9 +19,9 @@ public struct IntervalRow: Identifiable, Equatable, Sendable {
 /// The values of the schedule form, held apart from the stored schedule until Save.
 public struct ScheduleDraft: Equatable, Sendable {
     public static let intervalRange = 1...180
-    public static let breakRange = 0.1...60.0
+    public static let breakRange = 0.1...(BreakSafety.maximumBreakDuration / 60)
     public static let shortBreakRange = breakRange
-    public static let longBreakRange = 5.0...60.0
+    public static let longBreakRange = 5.0...breakRange.upperBound
     public static let shortBreakCountRange = 1...10
 
     public var name = ""
