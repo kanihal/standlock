@@ -106,6 +106,7 @@
 		AEA17D2F86B24BE5FE56B024 /* RobotScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4C53062EDA5469F4E031D21 /* RobotScene.swift */; };
 		AFCD8E682F3B7C00A263441C /* SettingsSearchField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EB7CBA12B287EE7D1683389 /* SettingsSearchField.swift */; };
 		B0B45CBAC1620814C7F443D0 /* DetectionSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBF6A31515CC4248B938E982 /* DetectionSettingsView.swift */; };
+		B0FB542B8A2FC50C2A8D71E2 /* ReorganizeActionIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244771462D156C4FB6D66A1C /* ReorganizeActionIcon.swift */; };
 		B2DDDE67D0C30F62374D0BBE /* PermissionBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2BDD3661430F1F997413023 /* PermissionBadge.swift */; };
 		B2FF3CCDF5FB0EFC3C60C8BF /* DayButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = B06BD317C6ADEBC1F1D16043 /* DayButtons.swift */; };
 		B3DAE3D0009EA570806955F3 /* PermissionCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2442916C24424F076D8711A6 /* PermissionCard.swift */; };
@@ -165,6 +166,7 @@
 		20227808D86E5CC2E786ADAA /* BreakScreenSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreakScreenSettingsView.swift; sourceTree = "<group>"; };
 		2063FDE70AFCC135664A8FD4 /* Exercises.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Exercises.json; sourceTree = "<group>"; };
 		2442916C24424F076D8711A6 /* PermissionCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionCard.swift; sourceTree = "<group>"; };
+		244771462D156C4FB6D66A1C /* ReorganizeActionIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReorganizeActionIcon.swift; sourceTree = "<group>"; };
 		24E37F0725B2E389ACEC601F /* DeskScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeskScene.swift; sourceTree = "<group>"; };
 		29B46D4E8DC400FCF4E57374 /* SettingsNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsNavigation.swift; sourceTree = "<group>"; };
 		2D5900DFD7FAE70774438F1F /* OpenSettingsCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSettingsCommand.swift; sourceTree = "<group>"; };
@@ -357,6 +359,7 @@
 				AF6724F4176D1F398DF9A697 /* LevelPill.swift */,
 				99BB0E055C4BD25865AD3EE1 /* ManuscriptBreakView.swift */,
 				33012BFC809E077C2D638165 /* NextIntervalLabel.swift */,
+				244771462D156C4FB6D66A1C /* ReorganizeActionIcon.swift */,
 				654D9BDDBCFB302FA984A8EA /* RestRecallContent.swift */,
 				43B1BE95A60D5294C770AEDE /* StatsFooter.swift */,
 				DEAF9C8AFAF33310B45445B2 /* TimerNumerals.swift */,
@@ -739,6 +742,7 @@
 				4A537C55B992DF62814F9857 /* QuickActionsView.swift in Sources */,
 				034D0ADC1966552BA8A77C1F /* RainyDayScene.swift in Sources */,
 				7FAD5E79A4B910ECDB633365 /* ReadingScene.swift in Sources */,
+				B0FB542B8A2FC50C2A8D71E2 /* ReorganizeActionIcon.swift in Sources */,
 				F6490C090F73DF0F0F90CC90 /* RestRecallContent.swift in Sources */,
 				AEA17D2F86B24BE5FE56B024 /* RobotScene.swift in Sources */,
 				E9A645EF57C9276206BF0394 /* SceneBubble.swift in Sources */,

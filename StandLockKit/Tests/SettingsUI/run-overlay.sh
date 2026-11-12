@@ -24,7 +24,7 @@ xcrun swiftc -parse-as-library -target "$(uname -m)-apple-macosx13.0" \
     StandLockKit/Tests/SettingsUI/OverlayWindowRegression.swift \
     StandLock/AppState/{OverlayWindowController,LanguageStore,ThemeStore,AppTheme,MediaController}.swift \
     StandLock/Views/LocalizedRoot.swift \
-    StandLock/Views/BreakScreen/{BreakOverlayWindow,BreakScreenLook,BreakPalette,BreakTypography,BreakDismissalState,ManuscriptBreakView,RestRecallContent,TimerNumerals,HexColor+SwiftUI,EmergencyComboMonitor}.swift \
+    StandLock/Views/BreakScreen/{BreakOverlayWindow,BreakScreenLook,BreakPalette,BreakTypography,BreakDismissalState,ManuscriptBreakView,RestRecallContent,ReorganizeActionIcon,TimerNumerals,HexColor+SwiftUI,EmergencyComboMonitor}.swift \
     -o "$test_app/Contents/MacOS/OverlayWindowRegression"
 open -n -W "$test_app" --stdout "$test_dir/stdout" --stderr "$test_dir/stderr" --args "$test_dir/passed"
 cat "$test_dir/stdout" "$test_dir/stderr"

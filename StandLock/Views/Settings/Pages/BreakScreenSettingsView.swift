@@ -46,7 +46,7 @@ struct BreakScreenSettingsView: View {
             }
 
             SettingsSection("Content") {
-                Text("Every break shows only Rest & Recall and a small countdown in the bottom-right corner.")
+                Text("Every break shows Rest, Recall, and Reorganize with a small countdown in the bottom-right corner.")
                     .font(.callout)
                     .foregroundStyle(.secondary)
                     .padding(SettingsTokens.rowInsets)
