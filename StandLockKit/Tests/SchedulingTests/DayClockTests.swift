@@ -34,25 +34,25 @@ struct DayClockTests {
         #expect(clock.workDuration == 14400)
     }
 
-    @Test func overnightPreviewFollowsSelectedCalendarDays() {
+    @Test func overnightPreviewFollowsTheSelectedStartDay() {
         let stored = schedule(windows: [TimeWindow(startHour: 22, startMinute: 0, endHour: 2, endMinute: 0)], days: .custom([.monday]))
         let calendar = Calendar.current
         let monday = calendar.date(from: DateComponents(year: 2026, month: 5, day: 4, hour: 0))!
         let tuesday = calendar.date(from: DateComponents(year: 2026, month: 5, day: 5, hour: 1))!
         let preview = DayPreview.make(for: stored, from: monday)
-        #expect(preview.items.map { $0.hour * 60 + $0.minute } == [55, 1380])
-        #expect(!ScheduleEvaluator().isWithinActiveWindow(stored, at: tuesday))
+        #expect(preview.items.map { $0.hour * 60 + $0.minute } == [1375, 0, 60])
+        #expect(ScheduleEvaluator().isWithinActiveWindow(stored, at: tuesday))
         let clock = DayClock(schedule: stored, preview: preview)
-        #expect(clock.workDuration == 13800)
+        #expect(clock.workDuration == 13500)
         #expect(clock.segments.first?.start == 0)
         #expect(clock.segments.last?.end == 86400)
     }
 
-    @Test func aBreakBeyondTheWindowStillAppearsButStopsAtMidnight() {
+    @Test func aBreakBeyondTheWindowWrapsAcrossMidnight() {
         let stored = schedule(windows: [TimeWindow(startHour: 23, startMinute: 0, endHour: 23, endMinute: 58)])
         let clock = DayClock(schedule: stored, preview: DayPreview(items: [.init(hour: 23, minute: 55, duration: 600)]))
-        #expect(clock.segments == [.init(kind: .work, start: 82800, end: 86100), .init(kind: .shortBreak, start: 86100, end: 86400)])
-        #expect(clock.breakDuration == 300)
+        #expect(clock.segments == [.init(kind: .shortBreak, start: 0, end: 300), .init(kind: .work, start: 82800, end: 86100), .init(kind: .shortBreak, start: 86100, end: 86400)])
+        #expect(clock.breakDuration == 600)
     }
 
     @Test func longBreaksUseTheRulePosition() {

@@ -25,8 +25,8 @@ public struct DayPreview: Equatable, Sendable {
     public var shortestBreak: TimeInterval? { items.map(\.duration).min() }
     public var longestBreak: TimeInterval? { items.map(\.duration).max() }
 
-    /// Previews `date`, or the next active day after it. The walk starts at the start of the day,
-    /// not the window start: that is how the coordinator meets a window it is outside of.
+    /// Previews windows opening on `date`, or the next selected day, including their overnight
+    /// tails. Midnight is part of the same rhythm, not the start of another work interval.
     public static func make(
         for schedule: Schedule, from date: Date, evaluator: any SchedulingEngine = ScheduleEvaluator()
     ) -> DayPreview {
@@ -38,18 +38,32 @@ public struct DayPreview: Equatable, Sendable {
                 Weekday(rawValue: calendar.component(.weekday, from: day))
                     .map(schedule.days.activeDays.contains) ?? false
             }
-        guard let activeDay, let dayEnd = calendar.date(byAdding: .day, value: 1, to: activeDay) else {
+        guard let activeDay,
+              let weekday = Weekday(rawValue: calendar.component(.weekday, from: activeDay)),
+              let nextDay = calendar.date(byAdding: .day, value: 1, to: activeDay) else {
             return DayPreview(items: [])
         }
+
+        let overnightEnd = schedule.windows.filter {
+            $0.startHour * 60 + $0.startMinute > $0.endHour * 60 + $0.endMinute
+        }.map { $0.endHour * 60 + $0.endMinute }.max() ?? 0
+        guard let dayEnd = calendar.date(bySettingHour: overnightEnd / 60,
+                                        minute: overnightEnd % 60, second: 0, of: nextDay) else {
+            return DayPreview(items: [])
+        }
+        // Isolate this day's openings so yesterday's overnight tail cannot create a second
+        // first interval at 00:00, and tomorrow's openings cannot enter the extended walk.
+        var previewSchedule = schedule
+        previewSchedule.days = .custom([weekday])
 
         var items: [Item] = []
         var cursor = activeDay
         var index = 0
         // `next > cursor`: on the day clocks go back the evaluator can answer with a time behind
         // the walk, and following it would hang the Settings window.
-        while let next = evaluator.nextBreakTime(for: schedule, after: cursor, cycleIndex: index),
+        while let next = evaluator.nextBreakTime(for: previewSchedule, after: cursor, cycleIndex: index),
               next > cursor, next < dayEnd {
-            let duration = evaluator.breakDuration(for: schedule, breakIndex: index)
+            let duration = evaluator.breakDuration(for: previewSchedule, breakIndex: index)
             let time = calendar.dateComponents([.hour, .minute, .second], from: next)
             items.append(Item(hour: time.hour ?? 0, minute: time.minute ?? 0, second: time.second ?? 0, duration: duration))
             cursor = next.addingTimeInterval(duration)

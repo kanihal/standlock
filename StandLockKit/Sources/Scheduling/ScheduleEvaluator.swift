@@ -7,13 +7,23 @@ public struct ScheduleEvaluator: SchedulingEngine, Sendable {
     public func isWithinActiveWindow(_ schedule: Schedule, at date: Date) -> Bool {
         let calendar = Calendar.current
         let weekdayComponent = calendar.component(.weekday, from: date)
-        guard let weekday = Weekday(rawValue: weekdayComponent),
-              schedule.days.activeDays.contains(weekday) else {
+        guard let weekday = Weekday(rawValue: weekdayComponent) else {
             return false
         }
         let hour = calendar.component(.hour, from: date)
         let minute = calendar.component(.minute, from: date)
-        return schedule.windows.contains { $0.contains(hour: hour, minute: minute) }
+        return schedule.windows.contains { window in
+            guard window.contains(hour: hour, minute: minute) else { return false }
+            let start = window.startHour * 60 + window.startMinute
+            let end = window.endHour * 60 + window.endMinute
+            // After midnight the window still belongs to the day it opened.
+            if start > end, hour * 60 + minute < end {
+                guard let previous = calendar.date(byAdding: .day, value: -1, to: date),
+                      let startDay = Weekday(rawValue: calendar.component(.weekday, from: previous)) else { return false }
+                return schedule.days.activeDays.contains(startDay)
+            }
+            return schedule.days.activeDays.contains(weekday)
+        }
     }
 
     public func nextBreakTime(for schedule: Schedule, after date: Date, cycleIndex: Int) -> Date? {

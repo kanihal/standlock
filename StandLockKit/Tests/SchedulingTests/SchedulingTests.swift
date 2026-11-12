@@ -139,6 +139,18 @@ struct ScheduleEvaluatorTests {
         #expect(!evaluator.isWithinActiveWindow(schedule, at: monday10))
     }
 
+    @Test func overnightWindowBelongsToItsStartingWeekday() {
+        let schedule = makeSchedule(days: .custom([.friday]), windows: [
+            TimeWindow(startHour: 22, startMinute: 45, endHour: 4, endMinute: 0)
+        ], breakInterval: 900, breakDuration: 18000)
+
+        #expect(!evaluator.isWithinActiveWindow(schedule, at: makeDate(day: 15, hour: 1)))
+        #expect(evaluator.isWithinActiveWindow(schedule, at: makeDate(day: 15, hour: 23)))
+        #expect(evaluator.isWithinActiveWindow(schedule, at: makeDate(day: 16, hour: 0)))
+        #expect(evaluator.isWithinActiveWindow(schedule, at: makeDate(day: 16, hour: 3, minute: 59)))
+        #expect(!evaluator.isWithinActiveWindow(schedule, at: makeDate(day: 16, hour: 4)))
+    }
+
     @Test func nextBreakTime_noActiveSchedule() {
         let schedule = makeSchedule(days: .custom([]))
         let result = evaluator.nextBreakTime(for: schedule, after: Date(), cycleIndex: 0)

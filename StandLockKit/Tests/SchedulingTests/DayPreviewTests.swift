@@ -119,6 +119,32 @@ struct DayPreviewTests {
         #expect(preview.longestBreak == nil)
     }
 
+    @Test(arguments: [DaySelection.weekdays, .custom([.monday])])
+    func overnightSleepHasOneContinuousBreak(days: DaySelection) {
+        let stored = schedule(days: days,
+            windows: [TimeWindow(startHour: 22, startMinute: 45, endHour: 4, endMinute: 0)],
+            interval: 900, duration: 18000)
+        let preview = DayPreview.make(for: stored, from: monday)
+
+        #expect(times(preview) == ["23:00"])
+        #expect(preview.items.map(\.duration) == [18000])
+        let clock = DayClock(schedule: stored, preview: preview)
+        #expect(clock.workDuration == 900)
+        #expect(clock.breakDuration == 18000)
+        #expect(clock.segments == [
+            .init(kind: .shortBreak, start: 0, end: 14400),
+            .init(kind: .work, start: 81900, end: 82800),
+            .init(kind: .shortBreak, start: 82800, end: 86400),
+        ])
+    }
+
+    @Test func overnightPreviewContinuesTheRhythmAfterMidnight() {
+        let preview = DayPreview.make(for: schedule(days: .custom([.monday]),
+            windows: [TimeWindow(startHour: 22, startMinute: 0, endHour: 2, endMinute: 0)],
+            interval: 3600, duration: 300), from: monday)
+        #expect(times(preview) == ["23:00", "00:05", "01:10"])
+    }
+
     @Test func fractionalMinuteBreaksKeepSecondsInTheirStartTimes() {
         let preview = DayPreview.make(for: schedule(
             windows: [TimeWindow(startHour: 9, startMinute: 0, endHour: 10, endMinute: 0)],

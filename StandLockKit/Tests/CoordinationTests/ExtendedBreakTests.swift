@@ -7,6 +7,38 @@ import StandLockCore
 @Suite("Multi-hour breaks")
 @MainActor
 struct ExtendedBreakTests {
+    @Test func midnightRolloverAndRelaunchPreserveTheSameOvernightBreak() async throws {
+        let time = ManualCoordinatorClock()
+        time.advance(12 * 3600 + 45 * 60)
+        var schedule = makeSchedule(breakInterval: 900, breakDuration: 18000)
+        schedule.days = .custom([.monday])
+        schedule.windows = [TimeWindow(startHour: 22, startMinute: 45, endHour: 4, endMinute: 0)]
+        let locker = MockLocker()
+        let first = BreakCoordinator(scheduler: ScheduleEvaluator(), detector: MockDetector(),
+                                     locker: locker, clock: time.clock)
+        defer { first.stop() }
+        first.start(with: [schedule], preferences: AppPreferences())
+        time.advance(900)
+        #expect(await waitUntil { locker.isShowing })
+        let breakID = locker.lastBreakID
+        time.advance(3600)
+        first.refreshDailyRollover()
+        #expect(locker.lastBreakID == breakID)
+        #expect(locker.isShowing)
+        let state = try JSONDecoder().decode(EnforcementState.self,
+            from: JSONEncoder().encode(first.captureEnforcementState()))
+        first.stop()
+
+        let restoredLocker = MockLocker()
+        let restored = BreakCoordinator(scheduler: ScheduleEvaluator(), detector: MockDetector(),
+                                        locker: restoredLocker, clock: time.clock)
+        defer { restored.stop() }
+        restored.start(with: [schedule], preferences: AppPreferences(), restoring: state)
+        #expect(restoredLocker.isShowing)
+        #expect(restoredLocker.lastBreakID == breakID)
+        #expect(restoredLocker.lastDuration == 14400)
+    }
+
     @Test func fifteenMinutesOfWorkStartsOneFiveHourOvernightBreak() async throws {
         let time = ManualCoordinatorClock()
         time.advance(12 * 3600 + 45 * 60) // Monday 22:45.

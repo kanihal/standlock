@@ -34,19 +34,23 @@ public struct DayClock: Equatable, Sendable {
             if start > end { return [0..<end, start..<86400] }
             return []
         })
-        let breaks = preview.items.enumerated().compactMap { index, item -> Segment? in
-            guard item.duration.isFinite, item.duration > 0 else { return nil }
+        let breaks = preview.items.enumerated().flatMap { index, item -> [Segment] in
+            guard item.duration.isFinite, item.duration > 0 else { return [] }
             let start = TimeInterval(item.hour * 3600 + item.minute * 60 + item.second)
-            let lower = max(0, start)
-            let upper = min(86400, start + item.duration)
-            guard lower < upper else { return nil }
+            guard (0..<86400).contains(start) else { return [] }
             var kind = Kind.shortBreak
             if let rule = schedule.repetitionRule,
                rule.shortBreakCount >= 0, rule.shortBreakCount < preview.items.count,
                index % (rule.shortBreakCount + 1) == rule.shortBreakCount {
                 kind = .longBreak
             }
-            return Segment(kind: kind, start: lower, end: upper)
+            if item.duration >= 86400 { return [Segment(kind: kind, start: 0, end: 86400)] }
+            let end = start + item.duration
+            var segments = [Segment(kind: kind, start: start, end: min(86400, end))]
+            if end > 86400 {
+                segments.append(Segment(kind: kind, start: 0, end: end - 86400))
+            }
+            return segments
         }
         let excluded = Self.merged(breaks.map { $0.start..<$0.end })
         var work: [Segment] = []

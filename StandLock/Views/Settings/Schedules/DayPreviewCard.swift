@@ -192,11 +192,7 @@ struct DayPreviewCard: View, Equatable {
         if built.windows.count == 1, let window = built.windows.first {
             let from = clock(hour: window.startHour, minute: window.startMinute)
             let to = clock(hour: window.endHour, minute: window.endMinute)
-            if window.startHour * 60 + window.startMinute > window.endHour * 60 + window.endMinute {
-                hours = languageStore.string("00:00–\(to) and \(from)–24:00")
-            } else {
-                hours = languageStore.string("between \(from) and \(to)")
-            }
+            hours = languageStore.string("between \(from) and \(to)")
         } else {
             hours = languageStore.string("in \(built.windows.count) time windows")
         }
