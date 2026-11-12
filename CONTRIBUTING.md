@@ -32,6 +32,8 @@ Rhythm number fields also have a standalone UI regression test. Run `bash StandL
 
 The schedule-editing challenge has a native window regression too: run `bash StandLockKit/Tests/SettingsUI/run-math.sh`. It uses an isolated preferences suite to check window focus, typeset equations, answer credit, and persistence without changing your schedules.
 
+Break overlays have a native window regression: run `bash StandLockKit/Tests/SettingsUI/run-overlay.sh` from a macOS desktop session. With multiple displays connected it checks every display, screen-change recreation, and dismissal without leaving blank windows eligible for focus. It uses isolated preferences.
+
 One thing that will confuse you at some point: after you add or remove a stored property on a model, the suite may die with `signal code 11` and no failing test name. That is SPM linking a test target against a stale build. Run `swift package clean --package-path StandLockKit` and try again.
 
 ## Code

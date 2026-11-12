@@ -123,8 +123,10 @@ final class OverlayWindowController: LockPresenting {
         isShowing = false
 
         for window in windows {
+            // Close before clearing the view so display/focus changes cannot revive
+            // an empty screen-saver-level window left behind by orderOut alone.
+            window.close()
             window.contentView = nil
-            window.orderOut(nil)
         }
 
         // Put back what `showOverlay` saved instead of looking for other visible windows:
