@@ -15,7 +15,7 @@ struct RestRecallContent: View {
                     reminder("Recall", size: size) { Image(systemName: "brain.head.profile") }
                     reminder("Reorganize", size: size) {
                         ReorganizeActionIcon()
-                            .stroke(style: StrokeStyle(lineWidth: max(1, size * 0.025), lineCap: .round, lineJoin: .round))
+                            .fill()
                             .frame(width: size * 0.75, height: size * 0.75)
                     }
                 }
