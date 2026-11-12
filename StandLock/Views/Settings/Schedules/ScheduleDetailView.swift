@@ -46,7 +46,6 @@ private struct SchedulePage: View {
             SettingsPageLayout(title: title, accessory: { enableToggle }) {
                 if let schedule {
                     ScheduleStatusView(schedule: schedule)
-                    ScheduleEditingLockSection(schedule: schedule, hasUnsavedEdits: isDirty)
                 } else if coordinator.schedules.isEmpty {
                     emptyNote
                 }
@@ -152,6 +151,11 @@ private struct SchedulePage: View {
             Spacer()
             Button("Cancel") { cancel() }
                 .disabled(!isDirty && (schedule != nil || coordinator.schedules.isEmpty))
+            if let schedule {
+                ScheduleEditingLockButton(isLocked: isLocked, hasUnsavedEdits: isDirty,
+                    onLock: { coordinator.lockScheduleEditing(schedule.id) },
+                    onUnlock: { coordinator.openScheduleChallenge(schedule) })
+            }
             Button(schedule == nil ? "Add Schedule" : "Save") { saveAndStay() }
                 .buttonStyle(.borderedProminent)
                 .disabled(isLocked || !draft.canSubmit(from: baseline))

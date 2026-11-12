@@ -25,6 +25,7 @@ xcrun swiftc -parse-as-library -target "$(uname -m)-apple-macosx13.0" \
     StandLock/AppState/{ScheduleEditLockStore,MathChallengeWindowController,LanguageStore}.swift \
     StandLock/Views/LocalizedRoot.swift \
     StandLock/Views/Settings/Schedules/MathChallengeView.swift \
+    StandLock/Views/Settings/Schedules/ScheduleEditingLockButton.swift \
     StandLock/Views/Settings/Schedules/LatexMathView.swift \
     -o "$test_app/Contents/MacOS/MathChallengeWindowRegression"
 # Launch Services registration is necessary for a helper to become an active accessory app.

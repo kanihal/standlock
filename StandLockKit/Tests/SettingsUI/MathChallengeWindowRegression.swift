@@ -6,6 +6,35 @@ import StandLockCore
 /// Exercises the actual window controller and view with an isolated preferences suite.
 @main
 struct MathChallengeWindowRegression {
+    private struct Footer: View {
+        @ObservedObject var store: ScheduleEditLockStore
+        let schedule: Schedule
+        let controller: MathChallengeWindowController
+        var hasUnsavedEdits = false
+
+        var body: some View {
+            HStack {
+                Button("Cancel") {}
+                ScheduleEditingLockButton(isLocked: store.isLocked(schedule.id), hasUnsavedEdits: hasUnsavedEdits,
+                    onLock: { store.lock(schedule.id) }, onUnlock: { controller.open(schedule) })
+                    .keyboardShortcut("l", modifiers: .command)
+                Button("Save") {}
+            }
+            .padding()
+        }
+    }
+
+    /// The fixture gives the actual button a local shortcut so it can be activated without
+    /// Input Monitoring or an external accessibility client.
+    @MainActor private static func pressLock(in window: NSWindow) {
+        guard let event = NSEvent.keyEvent(with: .keyDown, location: .zero, modifierFlags: .command,
+            timestamp: 0, windowNumber: window.windowNumber, context: nil,
+            characters: "l", charactersIgnoringModifiers: "l", isARepeat: false, keyCode: 37) else {
+            fatalError("Cannot create footer activation event")
+        }
+        _ = window.performKeyEquivalent(with: event)
+    }
+
     @MainActor private static func updateUI() {
         let deadline = Date().addingTimeInterval(0.2)
         while Date() < deadline {
@@ -35,7 +64,14 @@ struct MathChallengeWindowRegression {
         let store = ScheduleEditLockStore(defaults: defaults)
         let language = LanguageStore(defaults: defaults)
         let controller = MathChallengeWindowController(store: store, languageStore: language)
-        controller.open(schedule)
+        let footer = NSHostingView(rootView: Footer(store: store, schedule: schedule, controller: controller))
+        let footerWindow = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 300, height: 80),
+                                    styleMask: [.titled], backing: .buffered, defer: false)
+        footerWindow.isReleasedWhenClosed = false
+        footerWindow.contentView = footer
+        footerWindow.makeKeyAndOrderFront(nil)
+        updateUI()
+        pressLock(in: footerWindow)
         updateUI()
         guard let window = app.windows.first(where: { $0.title.contains(schedule.name) }) else {
             fatalError("Challenge window did not open")
@@ -124,8 +160,19 @@ struct MathChallengeWindowRegression {
         let restored = ScheduleEditLockRecord.restore(saved, at: store.now)
         precondition(restored?.isLocked(at: store.now) == false)
         precondition(restored?.session == nil)
+
+        footer.rootView = Footer(store: store, schedule: schedule, controller: controller, hasUnsavedEdits: true)
+        updateUI()
+        pressLock(in: footerWindow)
+        precondition(!store.isLocked(schedule.id), "Save or discard a draft before locking")
+        footer.rootView = Footer(store: store, schedule: schedule, controller: controller)
+        updateUI()
+        pressLock(in: footerWindow)
+        updateUI()
+        precondition(store.isLocked(schedule.id), "The unlocked icon must lock the schedule")
         window.close()
         other.close()
+        footerWindow.close()
         if CommandLine.arguments.count > 1 {
             try Data("passed".utf8).write(to: URL(fileURLWithPath: CommandLine.arguments[1]), options: .atomic)
         }
