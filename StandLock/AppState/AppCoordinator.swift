@@ -53,7 +53,9 @@ final class AppCoordinator: ObservableObject {
     private let systemAwayMonitor = SystemAwayMonitor()
     private let checkpointPersistence = AppCheckpointPersistence()
     private let shutdownHistory = ShutdownHistoryReader()
-    private var verifiedStartupRest: TimeInterval = 0
+    private let activityCheckpointMonitor = ActivityCheckpointMonitor()
+    private var startupRecovery = StartupRecoveryAssessment.preserveProgress
+    private var checkpointingStarted = false
     private var terminationReason: SystemTerminationReason?
     var hasUnfinishedBreak: Bool { coordinator?.hasUnfinishedBreak == true }
 
@@ -109,7 +111,7 @@ final class AppCoordinator: ObservableObject {
         NSWorkspace.shared.notificationCenter.addObserver(
             forName: NSWorkspace.willPowerOffNotification, object: nil, queue: .main
         ) { [weak self] _ in
-            MainActor.assumeIsolated { self?.saveEnforcementState() }
+            MainActor.assumeIsolated { _ = self?.saveEnforcementState() }
         }
         // Quitting must not hand back a fresh interval, cap and tier on relaunch.
         NotificationCenter.default.addObserver(
@@ -144,6 +146,9 @@ final class AppCoordinator: ObservableObject {
         if !schedules.isEmpty {
             startCoordinator(restoring: carriedStateForToday())
         }
+        checkpointingStarted = true
+        if coordinator == nil { saveEnforcementState() }
+        activityCheckpointMonitor.start { [weak self] in self?.saveEnforcementState() ?? false }
         if !hasCompletedOnboarding {
             Task { @MainActor in
                 try? await Task.sleep(for: .seconds(0.5))
@@ -203,7 +208,10 @@ final class AppCoordinator: ObservableObject {
             carriedEnforcementDay = checkpoint.savedAt
             todayStats = checkpoint.statistics
             if let record = checkpoint.dailyRecord { breakHistory.upsert(record) }
-            if let exit = checkpoint.exit { verifiedStartupRest = shutdownHistory.verifiedRest(after: exit) ?? 0 }
+            let since = checkpoint.observation?.boot.startedAt ?? checkpoint.exit?.boot.startedAt
+            startupRecovery = StartupRecoveryAssessment.assess(checkpoint: checkpoint,
+                current: shutdownHistory.currentObservation(), now: Date(),
+                history: since.map { shutdownHistory.history(since: $0) } ?? [])
         }
         todayStats.resetWeeklyIfNeeded(currentDate: Date())
         if todayStats.resetDailyIfNeeded(currentDate: Date()) { saveStatistics() }
@@ -393,10 +401,10 @@ final class AppCoordinator: ObservableObject {
                                preferences: preferences,
                                statistics: restoredStatistics ?? todayStats,
                                restoring: state,
-                               verifiedRestDuration: verifiedStartupRest,
                                initiallyAway: systemAwayMonitor.confirmedReasons,
-                               strictScheduleIDs: Set(schedules.filter { $0.disciplineLevel == .strict }.map(\.id)))
-        verifiedStartupRest = 0
+                               strictScheduleIDs: Set(schedules.filter { $0.disciplineLevel == .strict }.map(\.id)),
+                               startupRecovery: startupRecovery)
+        startupRecovery = .preserveProgress
         systemAwayMonitor.synchronize(breakCoordinator)
         refreshDismissalAvailability()
 
@@ -454,11 +462,12 @@ final class AppCoordinator: ObservableObject {
 
     /// Captures from the live coordinator when there is one. Without one -- every schedule off --
     /// the carry from the last teardown is still the current state and is written as it is.
-    private func saveEnforcementState() {
+    @discardableResult
+    private func saveEnforcementState() -> Bool {
         if let coordinator {
-            persistCoordinatorState(coordinator.captureEnforcementState(), statistics: coordinator.currentStatistics)
+            return coordinator.saveCheckpoint()
         } else {
-            persistCoordinatorState(carriedStateForToday(), statistics: todayStats)
+            return persistCoordinatorState(carriedStateForToday(), statistics: todayStats)
         }
     }
 
@@ -466,11 +475,14 @@ final class AppCoordinator: ObservableObject {
     private func persistCoordinatorState(_ state: EnforcementState, statistics: BreakStatistics) -> Bool {
         carriedEnforcementState = state
         carriedEnforcementDay = Date()
+        let observation = shutdownHistory.currentObservation()
         let exit = terminationReason.flatMap { reason in
-            shutdownHistory.currentBoot().map { SystemExitRecord(reason: reason, requestedAt: Date(), boot: $0) }
+            observation.map { SystemExitRecord(reason: reason, requestedAt: carriedEnforcementDay, boot: $0.boot) }
         }
         guard checkpointPersistence.save(CoordinatorCheckpoint(enforcement: state, statistics: statistics,
-            dailyRecord: dailyHistoryRecord(statistics), exit: exit)) else { return false }
+            dailyRecord: dailyHistoryRecord(statistics), exit: exit, savedAt: carriedEnforcementDay,
+            observation: observation)) else { return false }
+        activityCheckpointMonitor.recordSave()
         // Keep legacy mirrors current for compatibility; the atomic checkpoint is authoritative.
         guard let data = try? JSONEncoder().encode(carriedEnforcementState) else { return true }
         UserDefaults.standard.set(data, forKey: "enforcementState")
@@ -684,15 +696,17 @@ final class AppCoordinator: ObservableObject {
 
     private func observeSystemSleep() {
         systemAwayMonitor.start { [weak self] reason, active in
-            guard let self, let coordinator = self.coordinator else { return }
-            switch reason {
-            case .locked:
-                active ? coordinator.handleScreenLock() : coordinator.handleScreenUnlock()
-            case .sleeping:
-                active ? coordinator.handleSystemSleep() : coordinator.handleSystemWake()
+            guard let self else { return }
+            if let coordinator = self.coordinator {
+                switch reason {
+                case .locked:
+                    active ? coordinator.handleScreenLock() : coordinator.handleScreenUnlock()
+                case .sleeping:
+                    active ? coordinator.handleSystemSleep() : coordinator.handleSystemWake()
+                }
             }
             self.refreshDismissalAvailability()
-            self.saveEnforcementState()
+            if self.checkpointingStarted { self.saveEnforcementState() }
         }
     }
 

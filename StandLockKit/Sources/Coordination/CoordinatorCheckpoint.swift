@@ -8,18 +8,21 @@ public struct CoordinatorCheckpoint: Codable, Sendable {
     public var statistics: BreakStatistics
     public var dailyRecord: DailyBreakRecord?
     public var exit: SystemExitRecord?
+    public var observation: BootObservation?
 
     public init(enforcement: EnforcementState, statistics: BreakStatistics,
-                dailyRecord: DailyBreakRecord? = nil, exit: SystemExitRecord? = nil, savedAt: Date = Date()) {
+                dailyRecord: DailyBreakRecord? = nil, exit: SystemExitRecord? = nil, savedAt: Date = Date(),
+                observation: BootObservation? = nil) {
         version = 1
         self.enforcement = enforcement
         self.statistics = statistics
         self.dailyRecord = dailyRecord
         self.exit = exit
         self.savedAt = savedAt
+        self.observation = observation
     }
 
-    private enum CodingKeys: String, CodingKey { case version, savedAt, enforcement, statistics, dailyRecord, exit }
+    private enum CodingKeys: String, CodingKey { case version, savedAt, enforcement, statistics, dailyRecord, exit, observation }
 
     public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
@@ -33,5 +36,6 @@ public struct CoordinatorCheckpoint: Codable, Sendable {
         statistics = try values.decode(BreakStatistics.self, forKey: .statistics)
         dailyRecord = try values.decodeIfPresent(DailyBreakRecord.self, forKey: .dailyRecord)
         exit = try values.decodeIfPresent(SystemExitRecord.self, forKey: .exit)
+        observation = try values.decodeIfPresent(BootObservation.self, forKey: .observation)
     }
 }

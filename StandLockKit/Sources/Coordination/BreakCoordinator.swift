@@ -123,7 +123,12 @@ public final class BreakCoordinator {
                       restoring state: EnforcementState = EnforcementState(),
                       verifiedRestDuration: TimeInterval = 0,
                       initiallyAway: Set<AwaySessionTracker.Reason> = [],
-                      strictScheduleIDs: Set<UUID> = []) {
+                      strictScheduleIDs: Set<UUID> = [],
+                      startupRecovery: StartupRecoveryAssessment = .preserveProgress) {
+        let state = startupRecovery.applying(to: state, schedules: schedules)
+        let verifiedRestDuration: TimeInterval = if case .verifiedRest(let duration) = startupRecovery {
+            duration
+        } else { verifiedRestDuration }
         let wasWaitingForCommit = state.runtime?.persistenceIsPending == true
         beginTransition()
         defer {
@@ -195,6 +200,8 @@ public final class BreakCoordinator {
                 let qualified = verifiedRestDuration >= TimeInterval(min(30, max(1, preferences.naturalBreakThresholdMinutes)) * 60)
                 awayOwnerID = qualified ? nil : recovery.ownerScheduleID
             }
+        } else if verifiedRestDuration.isFinite, verifiedRestDuration > 0 {
+            applyRecoveredRest(verifiedRestDuration, ownerID: nil)
         }
         rearm()
         startCheckpointTimer()

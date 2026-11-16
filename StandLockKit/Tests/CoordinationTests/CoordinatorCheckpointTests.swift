@@ -5,6 +5,32 @@ import StandLockCore
 
 @Suite("Atomic coordinator checkpoints")
 struct CoordinatorCheckpointTests {
+    @Test func legacyCheckpointWithoutBootObservationStillLoads() throws {
+        let checkpoint = CoordinatorCheckpoint(enforcement: EnforcementState(), statistics: BreakStatistics())
+        var json = try #require(JSONSerialization.jsonObject(with: JSONEncoder().encode(checkpoint)) as? [String: Any])
+        json.removeValue(forKey: "observation")
+        let restored = try JSONDecoder().decode(CoordinatorCheckpoint.self, from: JSONSerialization.data(withJSONObject: json))
+        #expect(restored.observation == nil)
+    }
+
+    @Test func corruptCheckpointFallsBackToMatchingBootObservationAndState() throws {
+        let folder = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: folder) }
+        let url = folder.appendingPathComponent("state.json")
+        let store = CoordinatorCheckpointStore(url: url)
+        let scheduleID = UUID()
+        var checkpoint = CoordinatorCheckpoint(enforcement: EnforcementState(repetitionIndices: [scheduleID: 2]),
+            statistics: BreakStatistics(), observation: BootObservation(boot: SystemBoot(id: "old", startedAt: Date()), continuousTime: 10))
+        try store.save(checkpoint)
+        checkpoint.enforcement.repetitionIndices[scheduleID] = 0
+        checkpoint.observation?.boot.id = "new"
+        try store.save(checkpoint)
+        try Data("interrupted".utf8).write(to: url)
+        let restored = try #require(try store.load())
+        #expect(restored.observation?.boot.id == "old")
+        #expect(restored.enforcement.repetitionIndices[scheduleID] == 2)
+    }
+
     @Test func completionAndConsumedRecoveryRoundTripTogether() throws {
         let folder = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         defer { try? FileManager.default.removeItem(at: folder) }

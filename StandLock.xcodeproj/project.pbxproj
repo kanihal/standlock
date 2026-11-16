@@ -48,6 +48,7 @@
 		44D9EB3E27CF114DDF7E3735 /* BreakOverlayWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5BBDBF97CFAA5FF490CBD00 /* BreakOverlayWindow.swift */; };
 		45EEC3830A30A1175EBD1FCE /* ThemeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8180C020203FB970C798C84E /* ThemeStore.swift */; };
 		489E187986D7B35362EC1DA1 /* MenuBarStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D4A9BCE77DF93E823C10D87 /* MenuBarStatusView.swift */; };
+		48AE7C91A702B072C08DD659 /* ActivityCheckpointMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D2A880279DDDE075FCF6197 /* ActivityCheckpointMonitor.swift */; };
 		4A537C55B992DF62814F9857 /* QuickActionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2436E0F3F20FE12F920ADE7 /* QuickActionsView.swift */; };
 		4B80C2E0DB86C0724C97A49F /* ScheduleFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3663C539337040D9472D8D1 /* ScheduleFormView.swift */; };
 		4B8B1109D2B1AC920AF4656C /* HexColor+SwiftUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FBAA74EE852DF8AA45C0909 /* HexColor+SwiftUI.swift */; };
@@ -186,6 +187,7 @@
 		494CCBDAD86F56F31B1CC38C /* FishingScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FishingScene.swift; sourceTree = "<group>"; };
 		4A15609AB3FB09316E35B9DA /* SceneFace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneFace.swift; sourceTree = "<group>"; };
 		4A2AFE6DEC61C501B7EFE3CE /* CoffeeScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoffeeScene.swift; sourceTree = "<group>"; };
+		4D2A880279DDDE075FCF6197 /* ActivityCheckpointMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityCheckpointMonitor.swift; sourceTree = "<group>"; };
 		4EC56256F21155B8E45CAF6D /* CapybaraScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapybaraScene.swift; sourceTree = "<group>"; };
 		4ED1AF99472834C9823F0D6A /* WindowCloseGuard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowCloseGuard.swift; sourceTree = "<group>"; };
 		4FBAA74EE852DF8AA45C0909 /* HexColor+SwiftUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HexColor+SwiftUI.swift"; sourceTree = "<group>"; };
@@ -384,6 +386,7 @@
 		85FCDB623AA2D87A6776A720 /* AppState */ = {
 			isa = PBXGroup;
 			children = (
+				4D2A880279DDDE075FCF6197 /* ActivityCheckpointMonitor.swift */,
 				31816698C0D7125DAE1EA854 /* AppCheckpointPersistence.swift */,
 				A81F2ED91290AD26CB5B672E /* AppCoordinator.swift */,
 				7E2B0A5DC99A9E303D2FCE20 /* AppTerminationController.swift */,
@@ -661,6 +664,7 @@
 			files = (
 				ABE16985BBC55C65ED6E8824 /* AboutView.swift in Sources */,
 				E390B98931E7EE42E14FF2BD /* ActionArea.swift in Sources */,
+				48AE7C91A702B072C08DD659 /* ActivityCheckpointMonitor.swift in Sources */,
 				2A7B62FD915D507F18AD57C1 /* AppCheckpointPersistence.swift in Sources */,
 				4FCB9EE133A8300CC965E687 /* AppCoordinator.swift in Sources */,
 				9D77F7B7F12048E4399B8B25 /* AppDelegate.swift in Sources */,

@@ -8,6 +8,11 @@ public struct ShutdownHistoryReader: Sendable {
 
     public init() {}
 
+    public func currentObservation() -> BootObservation? {
+        currentBoot().map { BootObservation(boot: $0,
+            continuousTime: Double(clock_gettime_nsec_np(CLOCK_MONOTONIC_RAW)) / 1_000_000_000) }
+    }
+
     public func currentBoot() -> SystemBoot? {
         var size = 0
         guard sysctlbyname("kern.bootsessionuuid", nil, &size, nil, 0) == 0, size > 1 else { return nil }
