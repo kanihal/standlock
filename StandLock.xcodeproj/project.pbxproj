@@ -119,6 +119,7 @@
 		C28FC0B4BA6CD0AD9270833A /* OnboardingSceneStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1D1535BFC9FC9CFF5BC121A /* OnboardingSceneStep.swift */; };
 		C5895F53358BDFD586A4A800 /* SettingsDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF887D81035A1FE4735344F3 /* SettingsDetail.swift */; };
 		C5DEDF986BE39818EC35A762 /* LaunchAtLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F162EB6AEFC34DC88D7D57E /* LaunchAtLogin.swift */; };
+		C63CF1D269B1F9BF69948291 /* ScheduleRhythmDiagram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2F4FEC15AF96EEAE3539BD /* ScheduleRhythmDiagram.swift */; };
 		C79B40CDB801534CB03F8D40 /* PaintingScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F7EBA4EB133173F8CA622F /* PaintingScene.swift */; };
 		C9317350D818E7C826DA0966 /* CapybaraScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EC56256F21155B8E45CAF6D /* CapybaraScene.swift */; };
 		CACA2A694D8386E2C52987E7 /* HomebrewUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41523222886A9E60C4A27DD /* HomebrewUpdater.swift */; };
@@ -127,7 +128,6 @@
 		D6409DD8838F0ED91DC848C5 /* NextIntervalLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33012BFC809E077C2D638165 /* NextIntervalLabel.swift */; };
 		D751E70A3ADA8406061C5A90 /* ManuscriptBreakView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99BB0E055C4BD25865AD3EE1 /* ManuscriptBreakView.swift */; };
 		D8242BE99900EC0D1CB045DA /* MathChallengeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7E357B1FBE520C60C6C6AD5 /* MathChallengeView.swift */; };
-		DC5C51FC0B6D6E5BF02E2A55 /* DayPreviewClock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FA02ED05C527DFF70DD895A /* DayPreviewClock.swift */; };
 		DD2579C643F0D31CD8B4D420 /* OnboardingScheduleStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0719896A1B5F7C51A2D4225 /* OnboardingScheduleStep.swift */; };
 		E390B98931E7EE42E14FF2BD /* ActionArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A68046037D0CAAE70C0F88 /* ActionArea.swift */; };
 		E53542CFD208972C8A8BD5C7 /* PanelClock.swift in Sources */ = {isa = PBXBuildFile; fileRef = C74EB53DDDC340414AD64BE2 /* PanelClock.swift */; };
@@ -164,6 +164,7 @@
 		1D4A9BCE77DF93E823C10D87 /* MenuBarStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarStatusView.swift; sourceTree = "<group>"; };
 		1D816A891C5FD51B89E4D0E2 /* DisciplineSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisciplineSettingsView.swift; sourceTree = "<group>"; };
 		1DDFFDDA606933D2B511DEFE /* HammockScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HammockScene.swift; sourceTree = "<group>"; };
+		1F2F4FEC15AF96EEAE3539BD /* ScheduleRhythmDiagram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleRhythmDiagram.swift; sourceTree = "<group>"; };
 		20227808D86E5CC2E786ADAA /* BreakScreenSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreakScreenSettingsView.swift; sourceTree = "<group>"; };
 		2063FDE70AFCC135664A8FD4 /* Exercises.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Exercises.json; sourceTree = "<group>"; };
 		2442916C24424F076D8711A6 /* PermissionCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionCard.swift; sourceTree = "<group>"; };
@@ -171,7 +172,6 @@
 		24E37F0725B2E389ACEC601F /* DeskScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeskScene.swift; sourceTree = "<group>"; };
 		29B46D4E8DC400FCF4E57374 /* SettingsNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsNavigation.swift; sourceTree = "<group>"; };
 		2D5900DFD7FAE70774438F1F /* OpenSettingsCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSettingsCommand.swift; sourceTree = "<group>"; };
-		2FA02ED05C527DFF70DD895A /* DayPreviewClock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayPreviewClock.swift; sourceTree = "<group>"; };
 		303422D10B9C319038D63E32 /* SoftwareUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoftwareUpdate.swift; sourceTree = "<group>"; };
 		31816698C0D7125DAE1EA854 /* AppCheckpointPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCheckpointPersistence.swift; sourceTree = "<group>"; };
 		33012BFC809E077C2D638165 /* NextIntervalLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextIntervalLabel.swift; sourceTree = "<group>"; };
@@ -329,7 +329,6 @@
 			children = (
 				B06BD317C6ADEBC1F1D16043 /* DayButtons.swift */,
 				CECAC1DE354D80668B0437F6 /* DayPreviewCard.swift */,
-				2FA02ED05C527DFF70DD895A /* DayPreviewClock.swift */,
 				BF82AC0C965E52DC46B97A8C /* DeleteConfirmationView.swift */,
 				9685AC67A3B1CA0D154BC6DB /* DisciplineLevelPicker.swift */,
 				F34075E4583B1A61D921D3D4 /* LatexMathView.swift */,
@@ -338,6 +337,7 @@
 				C943089C741FEB2829346E4E /* ScheduleEditingLockButton.swift */,
 				C3663C539337040D9472D8D1 /* ScheduleFormView.swift */,
 				74C04E6E011C52FD7B30022D /* ScheduleHoursEditor.swift */,
+				1F2F4FEC15AF96EEAE3539BD /* ScheduleRhythmDiagram.swift */,
 				D6C6D75C90B669E50DB1FF4F /* ScheduleRhythmSection.swift */,
 				9A485172E288DBE02E326017 /* ScheduleStatusView.swift */,
 				B87A8947B73CA1C6C6D091F7 /* TemplateRow.swift */,
@@ -686,7 +686,6 @@
 				7A2143A0695F8455C834C0C3 /* CookingScene.swift in Sources */,
 				B2FF3CCDF5FB0EFC3C60C8BF /* DayButtons.swift in Sources */,
 				877287617D7DDBAB2346687C /* DayPreviewCard.swift in Sources */,
-				DC5C51FC0B6D6E5BF02E2A55 /* DayPreviewClock.swift in Sources */,
 				E6C55A4F70CDBF7DB5403B1F /* DeleteConfirmationView.swift in Sources */,
 				CE55FB80048215F1C86DC99D /* DeskScene.swift in Sources */,
 				B0B45CBAC1620814C7F443D0 /* DetectionSettingsView.swift in Sources */,
@@ -757,6 +756,7 @@
 				E933C276955606E1DF88D49B /* ScheduleEditingLockButton.swift in Sources */,
 				4B80C2E0DB86C0724C97A49F /* ScheduleFormView.swift in Sources */,
 				3B0643415597DD6CE4E27728 /* ScheduleHoursEditor.swift in Sources */,
+				C63CF1D269B1F9BF69948291 /* ScheduleRhythmDiagram.swift in Sources */,
 				88DD763ED9C9C18D79112E1C /* ScheduleRhythmSection.swift in Sources */,
 				C144671C95E22BC38AD14FE8 /* ScheduleSidebarRow.swift in Sources */,
 				22B7DFF9D9E85875A7E90081 /* ScheduleStatusView.swift in Sources */,

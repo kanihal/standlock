@@ -11,7 +11,7 @@ struct DayPreviewCard: View, Equatable {
 
     let draft: ScheduleDraft
     let schedule: Schedule?
-    @State private var selectedSegment: DayClock.Segment?
+    @State private var selectedSegment: DayTimeline.Segment?
 
     @EnvironmentObject private var languageStore: LanguageStore
     @Environment(\.locale) private var locale
@@ -24,7 +24,7 @@ struct DayPreviewCard: View, Equatable {
     var body: some View {
         let built = draft.build(existing: schedule)
         let preview = DayPreview.make(for: built, from: Date())
-        let dial = DayClock(schedule: built, preview: preview)
+        let timeline = DayTimeline(schedule: built, preview: preview)
 
         SettingsSection("Your day") {
             VStack(alignment: .leading, spacing: SettingsTokens.cardSpacing) {
@@ -38,9 +38,9 @@ struct DayPreviewCard: View, Equatable {
                     } else {
                         header(preview, built)
                     }
-                    DayPreviewClock(clock: dial, windows: built.windows, hasLongBreaks: draft.useRepetition, selection: $selectedSegment)
+                    ScheduleRhythmDiagram(timeline: timeline, rhythm: ScheduleRhythm(schedule: built), selection: $selectedSegment)
                     ForEach(groups(of: preview), id: \.symbol) { group in
-                        groupRow(group, dial: dial)
+                        groupRow(group, timeline: timeline)
                     }
                     if preview.items.count > Self.listLimit {
                         Text("and \(preview.items.count - Self.listLimit) more")
@@ -100,7 +100,7 @@ struct DayPreviewCard: View, Equatable {
         ].filter { !$0.items.isEmpty }
     }
 
-    private func groupRow(_ group: TimeGroup, dial: DayClock) -> some View {
+    private func groupRow(_ group: TimeGroup, timeline: DayTimeline) -> some View {
         HStack(alignment: .top, spacing: SettingsTokens.cardSpacing) {
             HStack(spacing: SettingsTokens.listItemSpacing) {
                 Image(systemName: group.symbol)
@@ -117,8 +117,8 @@ struct DayPreviewCard: View, Equatable {
                 spacing: SettingsTokens.listItemSpacing
             ) {
                 ForEach(Array(group.items.enumerated()), id: \.offset) { _, item in
-                    let start = TimeInterval(item.hour * 3600 + item.minute * 60 + item.second)
-                    let segment = dial.segments.first { $0.kind != .work && $0.start == start }
+                    let start = Double(item.dayOffset) * 86400 + TimeInterval(item.hour * 3600 + item.minute * 60 + item.second)
+                    let segment = timeline.segments.first { $0.breakIndex != nil && $0.start == start }
                     let isSelected = segment != nil && selectedSegment == segment
                     Button {
                         selectedSegment = isSelected ? nil : segment

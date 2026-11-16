@@ -1,6 +1,91 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Work and break rhythm": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çalışma ve mola döngüsü"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "工作与休息节奏"
+          }
+        }
+      }
+    },
+    "Outside schedule": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Program dışı"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "计划外"
+          }
+        }
+      }
+    },
+    "Repeat rhythm": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Döngüyü tekrarla"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "重复节奏"
+          }
+        }
+      }
+    },
+    "Hover or select a segment to see its duration.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Süresini görmek için bir bölümün üzerine gelin veya bölümü seçin."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "将指针悬停在某个时段上或选择该时段，即可查看其时长。"
+          }
+        }
+      }
+    },
+    "Schedule ends at %@; the last break continues until %@.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Program %@ saatinde biter; son mola %@ saatine kadar devam eder."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "计划于 %@ 结束；最后一次休息持续至 %@。"
+          }
+        }
+      }
+    },
     "Unlock Schedule" : {
       "extractionState" : "manual"
     },

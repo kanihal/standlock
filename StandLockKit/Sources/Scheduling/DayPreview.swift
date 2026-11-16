@@ -8,12 +8,14 @@ public struct DayPreview: Equatable, Sendable {
         public let minute: Int
         public let second: Int
         public let duration: TimeInterval
+        public let dayOffset: Int
 
-        public init(hour: Int, minute: Int, second: Int = 0, duration: TimeInterval) {
+        public init(hour: Int, minute: Int, second: Int = 0, duration: TimeInterval, dayOffset: Int = 0) {
             self.hour = hour
             self.minute = minute
             self.second = second
             self.duration = duration
+            self.dayOffset = dayOffset
         }
     }
 
@@ -65,7 +67,9 @@ public struct DayPreview: Equatable, Sendable {
               next > cursor, next < dayEnd {
             let duration = evaluator.breakDuration(for: previewSchedule, breakIndex: index)
             let time = calendar.dateComponents([.hour, .minute, .second], from: next)
-            items.append(Item(hour: time.hour ?? 0, minute: time.minute ?? 0, second: time.second ?? 0, duration: duration))
+            let dayOffset = calendar.dateComponents([.day], from: activeDay, to: calendar.startOfDay(for: next)).day ?? 0
+            items.append(Item(hour: time.hour ?? 0, minute: time.minute ?? 0, second: time.second ?? 0,
+                              duration: duration, dayOffset: dayOffset))
             cursor = next.addingTimeInterval(duration)
             index += 1
         }
